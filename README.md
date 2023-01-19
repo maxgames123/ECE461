@@ -3,3 +3,4 @@
 Project Members:
 
 Maximilian Manzhosov
+Kevin Loiselle
