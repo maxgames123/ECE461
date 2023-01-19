@@ -2,5 +2,5 @@
 
 Project Members:
 
-Maximilian Manzhosov
+Maximilian Manzhosov  
 Kevin Loiselle
