@@ -4,5 +4,5 @@ Project Members:
 
 Maximilian Manzhosov  
 Kevin Loiselle  
-Omar Tounsi  
+Omar Tounsi
 Zach Liao
