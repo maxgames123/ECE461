@@ -3,6 +3,6 @@
 Project Members:
 
 Maximilian Manzhosov  
-Kevin Loiselle  
-Omar Tounsi  
+Kevin Loiselle    
 Zach Liao 
+Omar Tounsi
