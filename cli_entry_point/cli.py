@@ -1,5 +1,12 @@
+<<<<<<< HEAD:cli-entry-point/entry.py
 import ctypes
 import sys
+=======
+"""
+CLI entry point for repository analyzer.
+"""
+
+>>>>>>> main:cli_entry_point/cli.py
 from typing import List
 from repo_analyzer_interface import RepoAnalyzer
 
@@ -44,6 +51,7 @@ def run(args: List[str]):
     elif len(args) == 0:
         # runs help command if there are no args
         run_help()
+        return
 
     arg = args[0]
 
@@ -59,7 +67,3 @@ def run(args: List[str]):
         run_repo_list()
     else:
         run_url(arg)
-
-
-if __name__ == "__main__":
-    run(sys.argv[1:])
