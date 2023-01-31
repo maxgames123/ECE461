@@ -1,6 +1,6 @@
 import sys
 from typing import List
-
+import ctypes
 
 def run_install():
     # python
@@ -57,5 +57,22 @@ def run(args: List[str]):
         run_url(arg)
 
 
+def load_rust_lib():
+    strl = ctypes.WinDLL("repo_analyzer.dll")
+    # r_lib = ctypes.cdll.LoadLibrary("repo_analyzer.dll")
+    # print(r_lib.get_string().decode('utf-8'))
+
+    ENCODING = "utf-8"
+
+    get_string = strl.get_string
+    get_string.argtypes = [ctypes.c_char_p]
+    get_string.restype = ctypes.c_char_p
+    input_str = "Hello".encode(ENCODING)
+    result_ptr = get_string(input_str)
+    result = ctypes.string_at(result_ptr)
+    print(result.decode(ENCODING))
+
+
 if __name__ == "__main__":
-    run(sys.argv[1:])
+    load_rust_lib()
+    # run(sys.argv[1:])
