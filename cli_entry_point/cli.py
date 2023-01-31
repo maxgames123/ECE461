@@ -31,7 +31,7 @@ def run_help():
 
 def run_repo_list():
     # rust
-    interface = RepoAnalyzer("test.dll")
+    interface = RepoAnalyzer()
     interface.display_repo_list()
 
 
@@ -65,3 +65,7 @@ def run(args: List[str]):
         run_repo_list()
     else:
         run_url(arg)
+
+
+if __name__ == "__main__":
+    run(sys.argv[1:])
