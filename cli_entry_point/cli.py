@@ -1,8 +1,14 @@
+<<<<<<< HEAD:cli-entry-point/entry.py
+import ctypes
+import sys
+=======
 """
 CLI entry point for repository analyzer.
 """
 
+>>>>>>> main:cli_entry_point/cli.py
 from typing import List
+from repo_analyzer_interface import RepoAnalyzer
 
 
 def run_install():
@@ -27,13 +33,15 @@ def run_help():
 
 def run_repo_list():
     # rust
-    print("repo list functionality not implemented.")
+    interface = RepoAnalyzer("test.dll")
+    interface.display_repo_list()
 
 
 def run_url(url: str):
     # rust
     print(url)
-    print("url input functionality not implmemented")
+    interface = RepoAnalyzer()
+    interface.print_score_from_url()
 
 
 def run(args: List[str]):
