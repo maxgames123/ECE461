@@ -1,5 +1,8 @@
 extern crate libc;
 
+mod repo_list;
+mod url_input;
+
 use libc::c_char;
 use std::ffi::{CString, CStr};
 
@@ -30,12 +33,12 @@ pub extern fn get_string(input: *const c_char) -> *mut c_char {
 
 #[no_mangle]
 pub extern "C" fn display_repo_list() {
-    println!("Hello from display_repo_list in the Rust library!");
+    repo_list::run();
 }
 
 
 #[no_mangle]
 pub extern "C" fn print_score_from_url() {
-    println!("Hello from print_score_from_url in the Rust library!");
+    url_input::run();
 }
 

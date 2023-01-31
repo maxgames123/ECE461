@@ -1,12 +1,10 @@
-<<<<<<< HEAD:cli-entry-point/entry.py
 import ctypes
 import sys
-=======
+
 """
 CLI entry point for repository analyzer.
 """
 
->>>>>>> main:cli_entry_point/cli.py
 from typing import List
 from repo_analyzer_interface import RepoAnalyzer
 
@@ -33,7 +31,7 @@ def run_help():
 
 def run_repo_list():
     # rust
-    interface = RepoAnalyzer("test.dll")
+    interface = RepoAnalyzer()
     interface.display_repo_list()
 
 
@@ -67,3 +65,7 @@ def run(args: List[str]):
         run_repo_list()
     else:
         run_url(arg)
+
+
+if __name__ == "__main__":
+    run(sys.argv[1:])
