@@ -6,7 +6,11 @@ UTF8_ENCODING = "utf-8"
 
 class RepoAnalyzer:
     def __init__(self, dll_path: str = "repo_analyzer.dll", encoding: str = UTF8_ENCODING):
-        self.lib = ctypes.WinDLL(dll_path)
+        try:
+            self.lib = ctypes.WinDLL(dll_path)
+        except OSError:
+            print("Unable to load " + dll_path + ". Make sure it is located in the correct path.")
+            exit(0)
         self.encoding = encoding
 
     def display_repo_list(self):

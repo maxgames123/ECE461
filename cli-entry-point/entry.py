@@ -1,3 +1,4 @@
+import ctypes
 import sys
 from typing import List
 from repo_analyzer_interface import RepoAnalyzer
@@ -25,7 +26,7 @@ def run_help():
 
 def run_repo_list():
     # rust
-    interface = RepoAnalyzer()
+    interface = RepoAnalyzer("test.dll")
     interface.display_repo_list()
 
 
