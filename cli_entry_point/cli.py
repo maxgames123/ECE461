@@ -1,12 +1,10 @@
-<<<<<<< HEAD:cli-entry-point/entry.py
 import ctypes
 import sys
-=======
+
 """
 CLI entry point for repository analyzer.
 """
 
->>>>>>> main:cli_entry_point/cli.py
 from typing import List
 from repo_analyzer_interface import RepoAnalyzer
 
