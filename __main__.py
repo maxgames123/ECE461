@@ -5,5 +5,5 @@ The start of our adventure.
 import sys
 
 if __name__ == "__main__":
-    from __cli__ import run
+    from cli import run
     run(sys.argv[1:])
