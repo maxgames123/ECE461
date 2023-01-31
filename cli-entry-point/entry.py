@@ -1,6 +1,7 @@
 import sys
 from typing import List
-import ctypes
+from repo_analyzer_interface import RepoAnalyzer
+
 
 def run_install():
     # python
@@ -24,13 +25,15 @@ def run_help():
 
 def run_repo_list():
     # rust
-    print("repo list functionality not implemented.")
+    interface = RepoAnalyzer()
+    interface.display_repo_list()
 
 
 def run_url(url: str):
     # rust
     print(url)
-    print("url input functionality not implmemented")
+    interface = RepoAnalyzer()
+    interface.print_score_from_url()
 
 
 def run(args: List[str]):
@@ -57,22 +60,5 @@ def run(args: List[str]):
         run_url(arg)
 
 
-def load_rust_lib():
-    strl = ctypes.WinDLL("repo_analyzer.dll")
-    # r_lib = ctypes.cdll.LoadLibrary("repo_analyzer.dll")
-    # print(r_lib.get_string().decode('utf-8'))
-
-    ENCODING = "utf-8"
-
-    get_string = strl.get_string
-    get_string.argtypes = [ctypes.c_char_p]
-    get_string.restype = ctypes.c_char_p
-    input_str = "Hello".encode(ENCODING)
-    result_ptr = get_string(input_str)
-    result = ctypes.string_at(result_ptr)
-    print(result.decode(ENCODING))
-
-
 if __name__ == "__main__":
-    load_rust_lib()
-    # run(sys.argv[1:])
+    run(sys.argv[1:])
