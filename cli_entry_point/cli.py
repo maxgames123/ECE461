@@ -7,6 +7,7 @@ CLI entry point for repository analyzer.
 
 from typing import List
 from repo_analyzer_interface import RepoAnalyzer
+from build_code import build
 
 
 def run_install():
@@ -16,7 +17,7 @@ def run_install():
 
 def run_build():
     # python
-    print("build functionality not implemented.")
+    build()
 
 
 def run_test():
