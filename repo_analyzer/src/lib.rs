@@ -33,16 +33,19 @@ pub extern fn get_string(input: *const c_char) -> *mut c_char {
 
 
 #[no_mangle]
-pub extern "C" fn display_repo_list() -> *mut c_char {
-    let rl = repo_list::run();
-    let output = CString::new(rl).unwrap();
-
-    output.into_raw()
+pub extern "C" fn display_repo_list() {
+    repo_list::run();
 }
 
 
 #[no_mangle]
-pub extern "C" fn print_score_from_url() {
-    url_input::run();
+pub extern "C" fn print_score_from_url(input: *const c_char) {
+    let url = unsafe {
+        assert!(!input.is_null());
+        CStr::from_ptr(input).to_str().unwrap()
+    };
+
+    // rest_api::get_github_data(url);
+    url_input::run(url);
 }
 
