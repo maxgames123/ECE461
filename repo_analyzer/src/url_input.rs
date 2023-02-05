@@ -6,6 +6,9 @@ pub fn run(url: &str) -> Box<String> {
     return Box::new(String::from("from url_input.rs"));
 }
 
+// pub fn get_url_data(url: &str) -> Vec<String> {
+// }
+
 pub fn is_valid(url: &str) -> bool {
     return true;
 }
