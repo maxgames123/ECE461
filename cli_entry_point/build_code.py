@@ -1,2 +1,7 @@
+import os
+
 def build:
-    print("nothing to build")
+    os.system("cd ../repo_analyzer")
+    os.system("cargo build")
+    os.system("cd ../repo_analyzer")
+    os.system("mv /target/debug/filename.dll ../cli_entry_point")
