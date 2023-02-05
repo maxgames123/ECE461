@@ -1,7 +1,8 @@
 extern crate libc;
-
 mod repo_list;
 mod url_input;
+mod metric_calculations;
+mod rest_api;
 
 use libc::c_char;
 use std::ffi::{CString, CStr};
@@ -38,7 +39,13 @@ pub extern "C" fn display_repo_list() {
 
 
 #[no_mangle]
-pub extern "C" fn print_score_from_url() {
-    url_input::run();
+pub extern "C" fn print_score_from_url(input: *const c_char) {
+    let url = unsafe {
+        assert!(!input.is_null());
+        CStr::from_ptr(input).to_str().unwrap()
+    };
+
+    // rest_api::get_github_data(url);
+    url_input::run(url);
 }
 

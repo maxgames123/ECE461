@@ -15,11 +15,13 @@ class RepoAnalyzer:
 
     def display_repo_list(self):
         func = self.lib.display_repo_list
+        func.restype = ctypes.c_char_p
         func()
 
-    def print_score_from_url(self):
+    def print_score_from_url(self, url: str):
         func = self.lib.print_score_from_url
         func()
+
 
 # ignore this function, but this logic is needed later so do not delete it
 def example_rust_lib_func_call():

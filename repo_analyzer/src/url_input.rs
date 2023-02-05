@@ -1,5 +1,18 @@
 
 
-pub fn run() {
+
+pub fn run(url: &str) -> Box<String> {
     println!("Hello from url_input.rs in the Rust library!");
+    return Box::new(String::from("from url_input.rs"));
+}
+
+// pub fn get_url_data(url: &str) -> Vec<String> {
+// }
+
+pub fn is_valid(url: &str) -> bool {
+    return true;
+}
+
+pub fn get_data(url: &str) {
+
 }
