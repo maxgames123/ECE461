@@ -1,7 +1,8 @@
 extern crate libc;
-
 mod repo_list;
 mod url_input;
+mod metric_calculations;
+mod rest_api;
 
 use libc::c_char;
 use std::ffi::{CString, CStr};
@@ -32,8 +33,11 @@ pub extern fn get_string(input: *const c_char) -> *mut c_char {
 
 
 #[no_mangle]
-pub extern "C" fn display_repo_list() {
-    repo_list::run();
+pub extern "C" fn display_repo_list() -> *mut c_char {
+    let rl = repo_list::run();
+    let output = CString::new(rl).unwrap();
+
+    output.into_raw()
 }
 
 

@@ -32,7 +32,8 @@ def run_help():
 def run_repo_list():
     # rust
     interface = RepoAnalyzer()
-    interface.display_repo_list()
+    r = interface.display_repo_list()
+    print(r)
 
 
 def run_url(url: str):
