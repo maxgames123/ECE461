@@ -8,11 +8,12 @@ CLI entry point for repository analyzer.
 from typing import List
 from repo_analyzer_interface import RepoAnalyzer
 from build_code import build
+from install_dependencies import install
 
 
 def run_install():
     # python
-    print("install functionality not implemented.")
+    install()
 
 
 def run_build():
