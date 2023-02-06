@@ -9,15 +9,13 @@ pub fn is_valid(url: &str, regex: &Regex) -> bool {
     regex.is_match(url)
 }
 
-
-// Is_valid function: REST API
 pub fn get_data(url: &str) -> Vec<String> {
-    let regular_expression = Regex::new(r"^https?:\/\/(www\.)?(npmjs|github)\.com\/(.+)").unwrap();
+    let regular_expression = Regex::new(r"^https?://(www.)?(npmjs|github).com/(.+)").unwrap();
     if is_valid(url, &regular_expression) {
         let matches = regular_expression.captures(url).unwrap();
         let domain = &matches[2];
         let subdirs = &matches[3];
-        vec![domain.to_string(), subdirs.to_string()]
+        return vec![domain.to_string(), subdirs.to_string()]
     } else {
         eprintln!("Invalid URL: {}", url);
         std::process::exit(1);
