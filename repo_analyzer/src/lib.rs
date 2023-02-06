@@ -4,8 +4,10 @@ mod url_input;
 mod metric_calculations;
 mod rest_api;
 
+use std::error::Error;
 use libc::c_char;
 use std::ffi::{CString, CStr};
+use std::iter::Map;
 
 // Followed instructions from:
 //  creating library:
@@ -39,13 +41,23 @@ pub extern "C" fn display_repo_list() {
 
 
 #[no_mangle]
-pub extern "C" fn print_score_from_url(input: *const c_char) {
+pub async extern "C" fn print_score_from_url(input: *const c_char) {
     let url = unsafe {
         assert!(!input.is_null());
         CStr::from_ptr(input).to_str().unwrap()
     };
 
-    // rest_api::get_github_data(url);
     url_input::run(url);
 }
 
+#[tokio::main]
+async fn main() -> Result<(), Box<dyn Error>> {
+    testt().await;
+    Ok(())
+}
+
+async fn testt() {
+    let url = "yeye";
+    rest_api::get_github_data(url).await;
+
+}
