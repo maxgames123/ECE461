@@ -1,0 +1,15 @@
+import sys
+import requests
+import json
+import re
+
+def run(url_list):
+    # Read file contents
+    FILE = open(url_list, 'r')
+    url_lines = [line.rstrip('/n') for line in FILE]
+    FILE.close()
+    
+    for url in url_lines:
+
+    # Should exit 0 on success.
+    sys.exit(0)
