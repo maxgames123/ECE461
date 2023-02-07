@@ -49,19 +49,41 @@ pub async extern "C" fn print_score_from_url(input: *const c_char) {
     url_input::run(url);
 }
 
+
+// main function for testing stuff
+// run test_web_api().await to print out the response for the given url.
+// Make sure to set your github token in your environmental variables under the name 'GITHUB_TOKEN'
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn Error>> {
-    testt().await;
+    test_web_api().await;
     Ok(())
 }
 
-async fn testt() -> Result<String, Box<dyn Error>> {
+
+async fn test_web_api() -> Result<(), Box<dyn Error>> {
+    get_response().await;
+    get_status_code().await;
+    Ok(())
+}
+
+async fn get_response() -> Result<(), Box<dyn Error>> {
+    let url = tutorial_url();
+    let v = rest_api::github_get_response_body(&url).await?;
+    println!("Response:");
+    println!("{:#?}", v);
+    Ok(())
+}
+
+async fn get_status_code() -> Result<(), Box<dyn Error>> {
+    let url = tutorial_url();
+    let v = rest_api::github_get_status(&url).await;
+    println!("Status code:");
+    println!("{}", v.unwrap().as_u16());
+    Ok(())
+}
+
+fn tutorial_url() -> String {
     let owner = "NationalSecurityAgency";
     let repo = "ghidra";
-    let url = format!("https://api.github.com/repos/{owner}/{repo}/stargazers",
-                                  owner = owner,
-                                  repo = repo).to_owned();
-    let v = rest_api::github_get_response_body(&url).await?;
-    println!("{:#?}", v);
-    Ok("ok".to_string())
+    format!("https://api.github.com/repos/{}/{}/stargazers", owner, repo)
 }
