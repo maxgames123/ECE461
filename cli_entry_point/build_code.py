@@ -1,8 +1,4 @@
 import os
 
 def build():
-    os.system("cd ../repo_analyzer; cargo build")
-    print("Build functionality not finished yet!")
-
-    # Fix the line of code below!
-    # os.system("mv /target/debug/FILENAME_HERE!.dll ../cli_entry_point")
+    os.system("cd ../repo_analyzer/; cargo build; ls ; mv target/debug/librepo_analyzer.so ../cli_entry_point ; cd ../cli_entry_point ; ls")
