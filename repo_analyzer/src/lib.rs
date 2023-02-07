@@ -82,6 +82,18 @@ async fn get_status_code() -> Result<(), Box<dyn Error>> {
     Ok(())
 }
 
+async fn get_body() -> Result<(), Box<dyn Error>> {
+    let url = tutorial_url();
+    let v = rest_api::github_get_response_body(&url).await;
+    let body = v.unwrap();
+    println!("Response Body:");
+    println!("{:#?}", body);
+    println!("accessing values inside the body:");
+    println!("{:#?}", body[0]);
+    println!("{}", body[0]["id"]);
+    Ok(())
+}
+
 fn tutorial_url() -> String {
     let owner = "NationalSecurityAgency";
     let repo = "ghidra";
