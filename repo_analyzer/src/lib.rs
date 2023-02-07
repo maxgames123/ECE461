@@ -7,7 +7,6 @@ mod rest_api;
 use std::error::Error;
 use libc::c_char;
 use std::ffi::{CString, CStr};
-use std::iter::Map;
 
 // Followed instructions from:
 //  creating library:
@@ -56,8 +55,13 @@ async fn main() -> Result<(), Box<dyn Error>> {
     Ok(())
 }
 
-async fn testt() {
-    let url = "yeye";
-    rest_api::get_github_data(url).await;
-
+async fn testt() -> Result<String, Box<dyn Error>> {
+    let owner = "NationalSecurityAgency";
+    let repo = "ghidra";
+    let url = format!("https://api.github.com/repos/{owner}/{repo}/stargazers",
+                                  owner = owner,
+                                  repo = repo).to_owned();
+    let v = rest_api::github_get_response_body(&url).await?;
+    println!("{:#?}", v);
+    Ok("ok".to_string())
 }
