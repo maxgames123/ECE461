@@ -1,28 +1,20 @@
 // It represents a repository
 pub struct Repo{
-    pub name: String,
     pub url: String,
+    pub net_score: f32,
     pub ramp_up: f32,
     pub correctness: f32,
     pub bus_factor: f32,
     pub responsive_maintainer: f32,
-    pub license: bool
+    pub license: i32,
 }
 
 pub fn display_repo(repo: &Repo){
-    println!("Repository name: {}", repo.name);
-    println!("Repository url: {}", repo.url);
-    println!("RampUp: {}", repo.ramp_up);
-    println!("Correctness: {}", repo.correctness);
-    println!("BusFactor: {}", repo.bus_factor);
-    println!("ResponsiveMaintainer: {}", repo.responsive_maintainer);
-    println!("License: {}", repo.license);
+    println!("{{\"URL\":\"{}\", \"NET_SCORE\":{}, \"RAMP_UP_SCORE\":{}, \"CORRECTNESS_SCORE\":{}, \"BUS_FACTOR_SCORE\":{}, \"RESPONSIVE_MAINTAINER_SCORE\":{}, \"LICENSE_SCORE\":{}}}", repo.url, repo.net_score, repo.ramp_up, repo.correctness, repo.bus_factor, repo.responsive_maintainer, repo.license);
 }
 
 pub fn display_repo_list(repo_list: &Vec<Repo>){
-    for (i, repo) in repo_list.iter().enumerate(){
-        println!("index: {}", i + 1);
+    for (_i, repo) in repo_list.iter().enumerate(){
         display_repo(repo);
-        println!("");
     }
 }
