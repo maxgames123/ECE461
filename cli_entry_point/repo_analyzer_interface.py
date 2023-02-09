@@ -5,11 +5,11 @@ UTF8_ENCODING = "utf-8"
 
 
 class RepoAnalyzer:
-    def __init__(self, dll_path: str = "repo_analyzer.dll", encoding: str = UTF8_ENCODING):
+    def __init__(self, so_path: str = "../repo_analyzer/target/debug/librepo_analyzer.so", encoding: str = UTF8_ENCODING):
         try:
-            self.lib = ctypes.WinDLL(dll_path)
+            self.lib = ctypes.CDLL(so_path)
         except OSError:
-            print("Unable to load " + dll_path + ". Make sure it is located in the correct path.")
+            print("Unable to load " + so_path + ". Make sure it is located in the correct path.")
             exit(0)
         self.encoding = encoding
 
@@ -20,13 +20,13 @@ class RepoAnalyzer:
 
     def print_score_from_url(self, url: str):
         func = self.lib.print_score_from_url
-        func()
+        func(url)
 
 
 # ignore this function, but this logic is needed later so do not delete it
 def example_rust_lib_func_call():
-    strl = ctypes.WinDLL("repo_analyzer.dll")
-    # r_lib = ctypes.cdll.LoadLibrary("repo_analyzer.dll")
+    strl = ctypes.CDLL("librepo_analyzer.so")
+    # r_lib = ctypes.cdll.LoadLibrary("librepo_analyzer.so")
     # print(r_lib.get_string().decode('utf-8'))
 
     get_string = strl.get_string

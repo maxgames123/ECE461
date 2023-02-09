@@ -42,7 +42,7 @@ def run_url(url: str):
     # rust
     print(url)
     interface = RepoAnalyzer()
-    interface.print_score_from_url()
+    interface.print_score_from_url(url.encode(encoding = 'UTF-8'))
 
 
 def run(args: List[str]):
