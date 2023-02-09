@@ -10,12 +10,21 @@ pub fn get_correctness(url: &str) -> f32 {
     closedBugs as f32 / openedIssues  as f32
 }
 
-pub fn get_license(url: &str) -> i32 {
+pub fn get_responsive_maintainer(url: &str) -> f32 {
+    0.0
+}
+
+pub fn get_bus_factor(url: &str) -> f32 {
+    0.0
+}
+
+pub fn get_license(url: &str) -> f32 {
     isCompatible(url)
 }
 
-pub fn get_overall(url: &str) -> f32 {
-    0.0
+pub fn get_overall(metrics: &[f64]) -> f32 {
+    let sum = metrics.iter().sum();
+    sum / metrics.len() as f64
 }
 
 
@@ -44,6 +53,6 @@ pub fn getOpenedIssues(url: &str) -> f32 {
 }
 
 // Returns 1 if the module is compatible with ACME's license, 0 otherwise.
-fn isCompatible(url: &str) -> i32 {
-    0
+fn isCompatible(url: &str) -> f32 {
+    0.0
 }
