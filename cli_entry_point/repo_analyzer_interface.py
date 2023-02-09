@@ -22,6 +22,10 @@ class RepoAnalyzer:
         func = self.lib.print_score_from_url
         func(url)
 
+    def rust_start_point(self, filename: str):
+        func = self.lib.rust_start_point
+        func(filename)
+
 
 # ignore this function, but this logic is needed later so do not delete it
 def example_rust_lib_func_call():
