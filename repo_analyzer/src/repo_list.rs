@@ -11,7 +11,7 @@ pub struct Repo{
     pub correctness: f32,
     pub bus_factor: f32,
     pub responsive_maintainer: f32,
-    pub license: i32,
+    pub license: f32,
 }
 
 impl Default for Repo {
@@ -23,7 +23,7 @@ impl Default for Repo {
             correctness: 0.0,
             bus_factor: 0.0,
             responsive_maintainer: 0.0,
-            license: 0,
+            license: 0.0,
         }
     }
 }
@@ -43,7 +43,7 @@ impl RepoList {
     }
 
     pub fn sort_by_net_score(&mut self) {
-        self.list.sort_by(|a, b| b.net_score.partial_cmp(&a.net_score).unwrap());
+        self.repos.sort_by(|a, b| b.net_score.partial_cmp(&a.net_score).unwrap());
     }
 
     pub fn display(&self) {
@@ -97,9 +97,9 @@ fn get_repo_list(path: String, repo_list: &mut Vec<Repo>){
             correctness: 0.0,
             bus_factor: 0.0,
             responsive_maintainer: 0.0,
-            license: 0
+            license: 0.0
         };
-        repo.license = 0;
+        repo.license = 1.0;
         repo_list.push(repo);
     }
 }

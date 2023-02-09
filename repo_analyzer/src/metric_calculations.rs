@@ -22,9 +22,9 @@ pub fn get_license(url: &str) -> f32 {
     isCompatible(url)
 }
 
-pub fn get_overall(metrics: &[f64]) -> f32 {
-    let sum = metrics.iter().sum();
-    sum / metrics.len() as f64
+pub fn get_overall(metrics: &[f32]) -> f32 {
+    let sum: f32 = metrics.iter().sum();
+    sum / metrics.len() as f32
 }
 
 
