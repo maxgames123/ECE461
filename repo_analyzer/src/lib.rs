@@ -56,11 +56,19 @@ pub extern "C" fn rust_start_point(input: *const c_char) {
         assert!(!input.is_null());
         CStr::from_ptr(input).to_str().unwrap()
     };  
-    
-    let url_list = read_url_file::read_lines(filename);
 
-    for url in url_list {
-        println!("{}", url);
+    let url_list = read_url_file::read_lines(filename); // returns urls as a list of strings
+
+    let mut repos = repo_list::RepoList::new(); // creates a RepoList object
+
+    for repo_url in url_list { // creates a Repo object for each url and adds it to RepoList
+        // What we should do here:
+        // 1) Get data from GitHub for each metric
+        // 2) Calculate each metric
+        // 3) Update line below with the scores. It just gives default values for now.
+        repos.add_repo(repo_list::Repo {url: repo_url, ..Default::default()});
     }
     
+    repos.sort_by_net_score(); // will sort the RepoList by trustworthiness.
+    repos.display(); // will print RepoList to stdout in the desired format!
 }
