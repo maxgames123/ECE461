@@ -1,39 +1,7 @@
-mod repo_display;
+mod repo_list;
 
 fn main(){
-    // Define several repositories
-    let mut repo1 = repo_display::Repo{
-        url: String::from("https://github.com/nullivex/nodist"),
-        ramp_up: 0.5,
-        correctness: 0.7,
-        bus_factor: 0.3,
-        responsive_maintainer: 0.4,
-        license: 1,
-        net_score : 0.9
-    };
-    repo1.ramp_up = 0.7;
-
-    let mut repo2 = repo_display::Repo{
-        url: String::from("https://github.com/abcd/Repo2.git"),
-        ramp_up: 0.5,
-        correctness: 0.75,
-        bus_factor: 0.52,
-        responsive_maintainer: 0.76,
-        license: 1,
-        net_score : 0.9
-    };
-    repo2.license = 1;
-
-    // Display the repo info
-    //repo_display::display_repo(&repo1);
-
-    // Create the repo list
-    let mut repo_list: Vec<repo_display::Repo> = Vec::new();
-    repo_list.push(repo1);
-    repo_list.push(repo2);
-
-    // Display the info of the multiple repo
-    repo_display::display_repo_list(&repo_list);
+    repo_list::run();
 }
 
 /*
