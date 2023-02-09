@@ -9,7 +9,6 @@ from typing import List
 from repo_analyzer_interface import RepoAnalyzer
 from build_code import build
 from install_dependencies import install
-from file_process import open_file
 
 
 def run_install():
@@ -41,10 +40,7 @@ def run_repo_list():
 
 def run_url(filename: str):
     # rust
-    url_list = open_file(filename)
-    print(url_list)
-
-
+    print(filename)
     interface = RepoAnalyzer()
     interface.print_score_from_url(filename.encode(encoding = 'UTF-8'))
 
