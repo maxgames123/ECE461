@@ -19,19 +19,18 @@ use async_recursion::async_recursion;
 ///
 /// * 'url' - The full npmjs url you want the associated github link of
 ///
-pub async fn npmjs_get_repository_link(repository: &str) -> Result<String, Box<dyn Error>> {
+// Retrieves the GitHub link for a npmjs package
+pub async fn npmjs_get_repository_link(owner: &str, repository: &str) -> Result<String, Box<dyn Error>> {
     // docs of the api to call to get the github link
     // https://api-docs.npms.io/#api-Package
 
-
-    let request_url_str = format!("https://api.npms.io/v2/package/{}", repository);
+    let request_url_str = format!("https://api.npms.io/v2/package/{owner}/{repository}", owner=owner, repository=repository);
 
     let client = Client::new();
+    // Send a GET request to the NPMS API URL
     let res = client
         .get(request_url_str)
         .send().await?;
-    // let status_code = res.status();
-    // println!("status code: {}", status_code);
 
     let result_text_res = res.text().await;
     if result_text_res.is_err() {
@@ -69,7 +68,11 @@ pub async fn npmjs_get_repository_link(repository: &str) -> Result<String, Box<d
     }
     let repo_link_str = repo_link_res.unwrap();
 
+    if !repo_link_str.contains("github.com") {
+        return Err(panic!("Failed to retrieve a Github link from npmjs package{}", repository));
+    } 
 
+    // Retrieves the Github URL in the API's return json object "repository" field
     // let t = json_obj.get("collected").unwrap()
     //                         .get("metadata").unwrap()
     //                         .get("links").unwrap()
