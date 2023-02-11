@@ -51,7 +51,7 @@ pub async extern "C" fn print_score_from_url(input: *const c_char) {
 
 
 // main function for testing stuff
-// run test_web_api().await to print out the response for the given url.
+// run test_web_api().await to run different examples of using the rest_api functions.
 // Make sure to set your github token in your environmental variables under the name 'GITHUB_TOKEN'
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn Error>> {
@@ -61,30 +61,39 @@ async fn main() -> Result<(), Box<dyn Error>> {
 
 
 async fn test_web_api() -> Result<(), Box<dyn Error>> {
-    get_response().await;
-    get_status_code().await;
+    get_github_metrics().await;
+    // get_response().await;
+    // get_status_code().await;
+    // get_body().await;
+
+    Ok(())
+}
+
+async fn get_github_metrics() -> Result<(), Box<dyn Error>> {
+    // let v = rest_api::github_get_metrics(&tutorial_owner(), &tutorial_repo()).await;
+    let v = rest_api::npmjs_get_repository_link("browserify").await;
+    println!("Github metrics:");
+    println!("{:#?}", v);
     Ok(())
 }
 
 async fn get_response() -> Result<(), Box<dyn Error>> {
-    let url = tutorial_url();
-    let v = rest_api::github_get_response_body(&url).await?;
+    let v = rest_api::github_get_response(&tutorial_owner(), &tutorial_repo(), None).await?;
     println!("Response:");
     println!("{:#?}", v);
     Ok(())
 }
 
 async fn get_status_code() -> Result<(), Box<dyn Error>> {
-    let url = tutorial_url();
-    let v = rest_api::github_get_status(&url).await;
+    let v = rest_api::github_get_status(&tutorial_owner(), &tutorial_repo()).await;
     println!("Status code:");
     println!("{}", v.unwrap().as_u16());
     Ok(())
 }
 
 async fn get_body() -> Result<(), Box<dyn Error>> {
-    let url = tutorial_url();
-    let v = rest_api::github_get_response_body(&url).await;
+
+    let v = rest_api::github_get_response_body(&tutorial_owner(), &tutorial_repo(), None).await;
     let body = v.unwrap();
     println!("Response Body:");
     println!("{:#?}", body);
@@ -94,8 +103,10 @@ async fn get_body() -> Result<(), Box<dyn Error>> {
     Ok(())
 }
 
-fn tutorial_url() -> String {
-    let owner = "NationalSecurityAgency";
-    let repo = "ghidra";
-    format!("https://api.github.com/repos/{}/{}/stargazers", owner, repo)
+fn tutorial_owner() -> String {
+    return "NationalSecurityAgency".to_owned();
+}
+
+fn tutorial_repo() -> String {
+    return "ghidra".to_owned();
 }
