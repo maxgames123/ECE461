@@ -47,7 +47,7 @@ pub extern "C" fn print_score_from_url(input: *const c_char) {
     };
 
     // rest_api::get_github_data(url);
-    url_input::run(url);
+    // url_input::run(url);
 }
 
 #[no_mangle]
