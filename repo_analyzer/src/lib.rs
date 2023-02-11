@@ -70,8 +70,8 @@ async fn test_web_api() -> Result<(), Box<dyn Error>> {
 }
 
 async fn get_github_metrics() -> Result<(), Box<dyn Error>> {
-    // let v = rest_api::github_get_metrics(&tutorial_owner(), &tutorial_repo()).await;
-    let v = rest_api::npmjs_get_repository_link("browserify").await;
+    let v = rest_api::github_get_metrics(&tutorial_owner(), &tutorial_repo()).await;
+    // let v = rest_api::npmjs_get_repository_link("browserify").await;
     println!("Github metrics:");
     println!("{:#?}", v);
     Ok(())

@@ -106,15 +106,15 @@ pub async fn npmjs_get_repository_link(repository: &str) -> Result<String, Box<d
 ///
 pub async fn github_get_metrics(owner: &str, repository: &str) -> Result<HashMap<String, String>, Box<dyn Error>> {
 // metrics:
-// license
-// codebase length
-// README
-// opened issues
-// # commits
-// # committers
+// license - not done
+// codebase_length - done
+// readme - not done
+// open_issues - done
+
     let mut metrics: HashMap<String, String> = HashMap::new();
-    let issues_path = format!("{}/issues", repository);
     let commits_path = format!("{}/commits", repository);
+    let contents_path = format!("{}/contents", repository);
+
 
     // get codebase length
     let response_res = github_get_response_body(owner, repository, None).await;
@@ -133,6 +133,7 @@ pub async fn github_get_metrics(owner: &str, repository: &str) -> Result<HashMap
     }
     metrics.insert(String::from("codebase_length"), format!("{}", codebase_length_val.unwrap()));
 
+
     // get # opened issues
     let open_issues_res = response.get("open_issues_count");
     if open_issues_res.is_none() {
@@ -146,6 +147,7 @@ pub async fn github_get_metrics(owner: &str, repository: &str) -> Result<HashMap
 
     metrics.insert(String::from("open_issues"), format!("{}", open_issues_val.unwrap()));
 
+
     // get # commits
     let commits_response_res = github_get_response_body(owner, &commits_path, None).await;
     if commits_response_res.is_err() {
@@ -158,13 +160,37 @@ pub async fn github_get_metrics(owner: &str, repository: &str) -> Result<HashMap
         return Err(panic!("Failed to get number of commits of {}/{}", owner, repository));
     }
     let commits_arr = commits_arr_res.unwrap();
-    // println!("{}", commits_arr.len());
 
-    // get # committers
 
     // get license / README
+    let contents_response_res = github_get_response_body(owner, &contents_path, None).await;
+    if contents_response_res.is_err() {
+        return Err(contents_response_res.unwrap_err());
+    }
+    let contents_response = contents_response_res.unwrap();
+    let contents_arr_res = contents_response.as_array();
+    if contents_arr_res.is_none() {
+        return Err(panic!("Failed to get contents of Github repository: {}/{}", owner, repository));
+    }
 
-    
+    let contents_arr = contents_arr_res.unwrap();
+
+    let license_res = github_get_license_from_contents_response(contents_arr);
+    if license_res.is_err() {
+        return Err(license_res.err().unwrap())
+    }
+    let license_str = license_res.unwrap();
+    let readme_res = github_get_readme_from_contents_response(contents_arr);
+    if readme_res.is_err() {
+        return Err(readme_res.err().unwrap());
+    }
+    let readme_str = readme_res.unwrap();
+    // TODO: convert contents from base64 to ascii then find line count
+    let readme_len = 0;
+
+    metrics.insert(String::from("license"), String::from(license_str));
+    metrics.insert(String::from("readme_len"), format!("{}", readme_len));
+
     Ok(metrics)
 }
 
@@ -228,7 +254,7 @@ pub async fn github_get_response(owner: &str, repository: &str, headers: Option<
         repo_mut.insert(0, '/');
     }
     let url = format!("https://api.github.com/repos{}{}", owner_mut, repo_mut);
-    let token_res = get_github_api_token();
+    let token_res = github_get_api_token();
     if token_res.is_err() {
         return Err(Box::try_from(token_res.err().unwrap()).unwrap());
     }
@@ -266,7 +292,7 @@ pub async fn github_get_response(owner: &str, repository: &str, headers: Option<
 //////////////////////////
 
 
-fn get_github_api_token() -> Result<String, VarError> {
+fn github_get_api_token() -> Result<String, VarError> {
     let name = "GITHUB_TOKEN";
     let res = env::var(name);
     if res.is_err() {
@@ -275,3 +301,18 @@ fn get_github_api_token() -> Result<String, VarError> {
     }
     Ok(res.unwrap())
 }
+
+// returns a string with the name of the license if it is found
+// returns a blank string if no license is found
+fn github_get_license_from_contents_response(content_arr: &Vec<serde_json::Value>) -> Result<String, Box<dyn Error>> {
+    // look for key words in file/dir names in base directory
+    // eg.: 'license' or names of licenses
+    // if there is a file called 'license' in root dir, the first words in it may be the license type.
+    Ok("license not implemented yet".to_owned())
+}
+
+// returns a blank string if no license is found
+fn github_get_readme_from_contents_response(content_arr: &Vec<serde_json::Value>) -> Result<String, Box<dyn Error>> {
+    Ok("readme not implemented yet".to_owned())
+}
+
