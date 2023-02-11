@@ -8,6 +8,10 @@ mod read_url_file;
 use libc::c_char;
 use std::ffi::{CString, CStr};
 
+use std::env;
+use std::fs::File;
+use std::io::Write;
+
 // Followed instructions from:
 //  creating library:
 //  https://developers.redhat.com/blog/2017/11/16/speed-python-using-rust
@@ -52,6 +56,26 @@ pub extern "C" fn print_score_from_url(input: *const c_char) {
 
 #[no_mangle]
 pub extern "C" fn rust_start_point(input: *const c_char) {
+    
+    let log_file_path = match env::var("LOG_FILE") {
+        Ok(val) => val,
+        Err(e) => {
+            println!("couldn't read LOG_FILE: {}", e);
+            return;
+        }
+    };
+
+    let log_level = match env::var("LOG_LEVEL") {
+        Ok(val) => val,
+        Err(e) => {
+            println!("couldn't read LOG_LEVEL: {}", e);
+            return;
+        }
+    };
+
+    let mut log_file = File::create(log_file_path).unwrap();
+    log_file.write_all(b"Hello, world!").unwrap();
+    
     let filename = unsafe {
         assert!(!input.is_null());
         CStr::from_ptr(input).to_str().unwrap()
