@@ -446,7 +446,16 @@ async fn github_get_license_from_contents_response(owner: &str, repository: &str
 }
 
 // returns a blank string if no license is found
-fn github_get_readme_from_contents_response(content_arr: &Vec<serde_json::Value>) -> Result<String, Box<dyn Error>> {
+fn github_get_readme_from_contents_response(owner: &str, repository: &str, content_arr: &Vec<serde_json::Value>) -> Result<String, Box<dyn Error>> {
+
+    // look for 'readme', 'readme.txt', or 'readme.md'
+    //
+    // for file_val in content_arr {
+    //     if file_val.
+    // }
+    //
+
+
     Ok("readme not implemented yet".to_owned())
 }
 
