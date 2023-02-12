@@ -125,6 +125,28 @@ pub async fn github_get_open_issues(owner: &str, repository: &str) -> Result<Str
 
 }
 
+pub async fn github_get_license(owner: &str, repository: &str) -> Result<String, String> {
+
+    let contents_response_res = github_get_response_body(owner, &contents_path, None).await;
+    if contents_response_res.is_err() {
+        return Err(contents_response_res.unwrap_err().to_string());
+    }
+    let contents_response = contents_response_res.unwrap();
+    let contents_arr_res = contents_response.as_array();
+    if contents_arr_res.is_none() {
+        return Err(panic!("Failed to get contents of Github repository: {}/{}", owner, repository));
+    }
+
+    let contents_arr = contents_arr_res.unwrap();
+
+    let license_res = github_get_license_from_contents_response(owner, repository, contents_arr).await;
+
+    if license_res.is_err() {
+        return Err(format!("Failed to get license from repository: {}/{}", owner, repository));
+    }
+    let license = license_res.unwrap();
+    Ok(license)
+}
 
 ///
 /// # Info
