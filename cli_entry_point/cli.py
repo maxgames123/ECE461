@@ -7,16 +7,18 @@ CLI entry point for repository analyzer.
 
 from typing import List
 from repo_analyzer_interface import RepoAnalyzer
+from build_code import build
+from install_dependencies import install
 
 
 def run_install():
     # python
-    print("install functionality not implemented.")
+    install()
 
 
 def run_build():
     # python
-    print("build functionality not implemented.")
+    build()
 
 
 def run_test():
@@ -36,11 +38,11 @@ def run_repo_list():
     print(r)
 
 
-def run_url(url: str):
+def run_url(filename: str):
     # rust
-    print(url)
+    print(filename)
     interface = RepoAnalyzer()
-    interface.print_score_from_url()
+    interface.rust_start_point(filename.encode(encoding = 'UTF-8'))
 
 
 def run(args: List[str]):
