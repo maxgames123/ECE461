@@ -33,22 +33,38 @@ use std::ffi::{CString, CStr};
 
 
 #[no_mangle]
-pub extern "C" fn rust_start_point(input: *const c_char) {
+pub async extern "C" fn rust_start_point(input: *const c_char) {
+
     let filename = unsafe {
         assert!(!input.is_null());
         CStr::from_ptr(input).to_str().unwrap()
     };  
 
     let url_list = read_url_file::read_lines(filename); // returns urls as a list of strings
-
     let mut repos = repo_list::RepoList::new(); // creates a RepoList object
 
     for repo_url in url_list { // creates a Repo object for each url and adds it to RepoList
+        let (domain, data) = url_input::get_data(&repo_url);
+        let owner = &data[0];
+        let package = &data[1];
+
+        if !domain.eq("npmjs") && !domain.eq("github"){
+            println!("Domain must either be npmjs or github!\n");
+            continue;
+        }
+
+        if domain.eq("npmjs") {
+            let github_link = rest_api::npmjs_get_repository_link(&data[0], &data[1]).await;
+            repos.add_repo(repo_list::Repo {url: github_link.unwrap(), ..Default::default()});
+        } else {
+            repos.add_repo(repo_list::Repo {url: repo_url, ..Default::default()});
+        }
+
+    
         // What we should do here:
         // 1) Get data from GitHub for each metric
         // 2) Calculate each metric
         // 3) Update line below with the scores. It just gives default values for now.
-        repos.add_repo(repo_list::Repo {url: repo_url, ..Default::default()});
     }
     
     repos.sort_by_net_score(); // will sort the RepoList by trustworthiness.

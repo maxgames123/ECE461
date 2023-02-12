@@ -1,5 +1,6 @@
 import ctypes
 import sys
+import threading
 
 """
 CLI entry point for repository analyzer.
@@ -42,7 +43,12 @@ def run_url(filename: str):
     # rust
     print(filename)
     interface = RepoAnalyzer()
-    interface.rust_start_point(filename.encode(encoding = 'UTF-8'))
+    #interface.rust_start_point(filename.encode(encoding = 'UTF-8'))
+    utf_filename = filename.encode(encoding = 'UTF-8')
+
+    thr = threading.Thread(target=interface.rust_start_point, args=(utf_filename))
+    thr.start()
+    thr.join()
 
 
 def run(args: List[str]):
