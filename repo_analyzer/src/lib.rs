@@ -10,6 +10,7 @@ mod read_url_file;
 use std::error::Error;
 use libc::c_char;
 use std::ffi::{CString, CStr};
+use std::process::Command;
 
 // Followed instructions from:
 //  creating library:
@@ -64,11 +65,69 @@ fn run_help() {
 }
 
 fn run_install() {
-    // Implement the run_install function here
+    Command::new("cargo")
+        .args(&["install", "cargo-edit"])
+        .output()
+        .expect("failed to execute process");
+
+    Command::new("cargo")
+        .args(&["add", "reqwest"])
+        .output()
+        .expect("failed to execute process");
+
+    Command::new("cargo")
+        .args(&["add", "serde"])
+        .output()
+        .expect("failed to execute process");
+
+    Command::new("cargo")
+        .args(&["add", "serde_json"])
+        .output()
+        .expect("failed to execute process");
+
+    Command::new("cargo")
+        .args(&["add", "tokio"])
+        .output()
+        .expect("failed to execute process");
+    
+    Command::new("cargo")
+        .args(&["add", "substring"])
+        .output()
+        .expect("failed to execute process");
+
+    Command::new("cargo")
+        .args(&["add", "base64"])
+        .output()
+        .expect("failed to execute process");
+
+        Command::new("cargo")
+        .args(&["add", "async-recursion"])
+        .output()
+        .expect("failed to execute process");
+
+    Command::new("cargo")
+        .args(&["add", "regex"])
+        .output()
+        .expect("failed to execute process");
+    
+    Command::new("cargo")
+        .args(&["add", "log"])
+        .output()
+        .expect("failed to execute process");
+
+    Command::new("cargo")
+        .args(&["add", "env_logger"])
+        .output()
+        .expect("failed to execute process");
+
+        println!("11 dependencies installed...");
 }
 
 fn run_build() {
-    // Implement the run_build function here
+    Command::new("cargo")
+        .arg("build")
+        .output()
+        .expect("failed to execute process");
 }
 
 fn run_test() {
