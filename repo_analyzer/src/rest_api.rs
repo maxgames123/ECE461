@@ -1,15 +1,12 @@
 use std::collections::HashMap;
-use std::{env, time};
+use std::{env};
 use std::str;
 use std::env::VarError;
 use std::error::{Error};
-use std::io::ErrorKind;
 use std::result::{Result};
-use reqwest::{Client, get, Response, StatusCode};
+use reqwest::{Client, Response, StatusCode};
 use reqwest::header::HeaderMap;
 use base64::{ Engine, engine::general_purpose };
-use serde_json::Value;
-use async_recursion::async_recursion;
 
 
 ///
@@ -183,7 +180,7 @@ pub async fn github_get_metrics(owner: &str, repository: &str) -> Result<HashMap
         return Err(license_res.err().unwrap())
     }
     let license_str = license_res.unwrap();
-    let readme_res = github_get_readme_from_contents_response(contents_arr);
+    let readme_res = github_get_readme_from_contents_response(owner, repository, contents_arr);
     if readme_res.is_err() {
         return Err(readme_res.err().unwrap());
     }

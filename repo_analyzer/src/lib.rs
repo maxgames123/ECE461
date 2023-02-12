@@ -18,39 +18,19 @@ use std::ffi::{CString, CStr};
 //  https://docs.rs/cpython/latest/cpython/
 //
 
-#[no_mangle]
-pub extern fn c_entry() {
-    println!("Hello World from Rust!");
 
-}
+// Example function on converting a C string to and from a rust string
+// #[no_mangle]
+// pub extern fn get_string(input: *const c_char) -> *mut c_char {
+//     let input_str = unsafe {
+//         assert!(!input.is_null());
+//         CStr::from_ptr(input).to_str().unwrap()
+//     };
+//     let output_str = format!("{} rust", input_str);
+//     let output = CString::new(output_str).unwrap();
+//     output.into_raw()
+// }
 
-#[no_mangle]
-pub extern fn get_string(input: *const c_char) -> *mut c_char {
-    let input_str = unsafe {
-        assert!(!input.is_null());
-        CStr::from_ptr(input).to_str().unwrap()
-    };
-    let output_str = format!("{} rust", input_str);
-    let output = CString::new(output_str).unwrap();
-    output.into_raw()
-}
-
-
-#[no_mangle]
-pub extern "C" fn display_repo_list() {
-    repo_list::run();
-}
-
-
-#[no_mangle]
-pub async extern "C" fn print_score_from_url(input: *const c_char) {
-    let url = unsafe {
-        assert!(!input.is_null());
-        CStr::from_ptr(input).to_str().unwrap()
-    };
-
-    url_input::run(url);
-}
 
 #[no_mangle]
 pub extern "C" fn rust_start_point(input: *const c_char) {
@@ -98,8 +78,7 @@ async fn test_web_api() -> Result<(), Box<dyn Error>> {
 }
 
 async fn get_github_metrics() -> Result<(), Box<dyn Error>> {
-    let v = rest_api::github_get_metrics(&tutorial_owne
-    r(), &tutorial_repo()).await;
+    let v = rest_api::github_get_metrics(&tutorial_owner(), &tutorial_repo()).await;
     // let v = rest_api::npmjs_get_repository_link("browserify").await;
     println!("Github metrics:");
     println!("{:#?}", v);
