@@ -118,8 +118,8 @@ async fn run_url(filename: &str) {
 
     for repo_url in url_list { // creates a Repo object for each url and adds it to RepoList
         let (domain, data) = url_input::get_data(&repo_url);
-        let owner = &data[0];
-        let package = &data[1];
+        let mut owner = data[0].as_str();
+        let mut package = data[1].as_str();
 
         println!("Domain is {}", domain);
         println!("owner is {}", owner);
@@ -137,13 +137,17 @@ async fn run_url(filename: &str) {
             };
 
             let (git_domain, git_data) = url_input::get_data(&github_link);
-            //owner = &git_data[0];
-            //package = &git_data[1];
+            owner = git_data[0].as_str();
+            package = git_data[1].as_str();
 
             println!("Domain is {}", domain);
             println!("github_link is {}", github_link);
             println!("owner is {}", git_data[0]);
             println!("package is {}\n", git_data[1]);
+
+
+            println!("code len: {}", rest_api::github_get_codebase_length(owner , package).await.unwrap());
+
 
             let metrics = rest_api::github_get_metrics(&git_data[0],&git_data[1]).await;
             repos.add_repo(repo_list::Repo {url: repo_url, ..Default::default()});
