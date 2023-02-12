@@ -152,6 +152,9 @@ async fn run_url(filename: &str) {
             let opened_issues = rest_api::github_get_open_issues(owner , package).await.unwrap();
             println!("open issues: {}", opened_issues);
 
+            let license = rest_api::github_get_license(owner , package).await.unwrap();
+            println!("license: {}", license);
+
             repos.add_repo(repo_list::Repo {url: repo_url, ..Default::default()});
             continue;
 
@@ -164,6 +167,9 @@ async fn run_url(filename: &str) {
 
         let opened_issues = rest_api::github_get_open_issues(owner , package).await.unwrap();
         println!("open issues: {}", opened_issues);
+
+        let license = rest_api::github_get_license(owner , package).await.unwrap();
+        println!("license: {}", license);
 
         //let metrics = rest_api::github_get_metrics(owner,package).await;
         repos.add_repo(repo_list::Repo {url: repo_url, ..Default::default()});

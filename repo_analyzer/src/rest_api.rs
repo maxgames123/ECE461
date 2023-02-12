@@ -127,6 +127,7 @@ pub async fn github_get_open_issues(owner: &str, repository: &str) -> Result<Str
 
 pub async fn github_get_license(owner: &str, repository: &str) -> Result<String, String> {
 
+    let contents_path = format!("{}/contents", repository);
     let contents_response_res = github_get_response_body(owner, &contents_path, None).await;
     if contents_response_res.is_err() {
         return Err(contents_response_res.unwrap_err().to_string());

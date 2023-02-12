@@ -1,17 +1,17 @@
-fn normalize(value: f32, range: i32) -> f32 {
-    value / range
-}
+// fn normalize(value: f32, range: i32) -> f32 {
+//     value / range
+// }
 
 
-pub fn get_ramp_up_time(codebase_length: &str) -> f32 {
-    let codebase_length = match codebase_length.parse::<f32>();
-
-}
+// pub fn get_ramp_up_time(codebase_length: &str) -> f32 {
+//     let codebase_length = match codebase_length.parse::<f32>();
+//     normalize(codebase_length,100000)
+// }
 
 pub fn get_correctness(url: &str) -> f32 {
     let closedBugs = getClosedBugs(url);
     let openedIssues = getOpenedIssues(url);
-    closedBugs as f32 / openedIssues  as f32
+    closedBugs as f32 / openedIssues  as f32 //1000
 }
 
 pub fn get_responsive_maintainer(url: &str) -> f32 {
