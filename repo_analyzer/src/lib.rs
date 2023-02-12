@@ -1,4 +1,6 @@
 extern crate libc;
+extern crate core;
+
 mod repo_list;
 mod url_input;
 mod metric_calculations;
