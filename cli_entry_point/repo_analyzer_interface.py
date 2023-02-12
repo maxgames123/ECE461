@@ -1,4 +1,5 @@
 import ctypes
+from ctypes import c_char_p
 
 # This file holds all of the logic used to interact with the rust library
 UTF8_ENCODING = "utf-8"
@@ -18,12 +19,13 @@ class RepoAnalyzer:
         func.restype = ctypes.c_char_p
         func()
 
-    def print_score_from_url(self):
+    def print_score_from_url(self, url):
         func = self.lib.print_score_from_url
         func(url)
 
     def rust_start_point(self, filename: str):
         func = self.lib.rust_start_point
+        func.argtypes = [c_char_p]
         func(filename)
 
 

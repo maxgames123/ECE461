@@ -32,6 +32,55 @@ use std::ffi::{CString, CStr};
 // }
 
 
+// run test_web_api().await to run different examples of using the rest_api functions.
+// Make sure to set your github token in your environmental variables under the name 'GITHUB_TOKEN'
+#[tokio::main]
+async fn main() -> Result<(), Box<dyn Error>> {
+    // test_web_api().await;
+    let args: Vec<String> = std::env::args().collect();
+
+    if args.len() > 2 {
+        println!("Incorrect arg count!");
+        return Ok(());
+    } else if args.len() == 1 {
+        run_help();
+        return Ok(());
+    }
+
+    match args[1].as_str() {
+        "install" => run_install(),
+        "build" => run_build(),
+        "test" => run_test(),
+        "help" => run_help(),
+        _ => run_url(&args[1]),
+    };
+
+    Ok(())
+}
+
+
+fn run_help() {
+    // Implement the run_help function here
+}
+
+fn run_install() {
+    // Implement the run_install function here
+}
+
+fn run_build() {
+    // Implement the run_build function here
+}
+
+fn run_test() {
+    // Implement the run_test function here
+}
+
+fn run_url(arg: &str) {
+    // Implement the run_url function here
+}
+
+
+
 #[no_mangle]
 pub async extern "C" fn rust_start_point(input: *const c_char) {
 
@@ -39,6 +88,8 @@ pub async extern "C" fn rust_start_point(input: *const c_char) {
         assert!(!input.is_null());
         CStr::from_ptr(input).to_str().unwrap()
     };  
+
+    println!("{}", filename);
 
     let url_list = read_url_file::read_lines(filename); // returns urls as a list of strings
     let mut repos = repo_list::RepoList::new(); // creates a RepoList object
@@ -60,29 +111,21 @@ pub async extern "C" fn rust_start_point(input: *const c_char) {
             repos.add_repo(repo_list::Repo {url: repo_url, ..Default::default()});
         }
 
-    
+
         // What we should do here:
         // 1) Get data from GitHub for each metric
         // 2) Calculate each metric
         // 3) Update line below with the scores. It just gives default values for now.
     }
-    
+
     repos.sort_by_net_score(); // will sort the RepoList by trustworthiness.
     repos.display(); // will print RepoList to stdout in the desired format!
 }
 
 
-// main function for testing stuff
-// run test_web_api().await to run different examples of using the rest_api functions.
-// Make sure to set your github token in your environmental variables under the name 'GITHUB_TOKEN'
-#[tokio::main]
-async fn main() -> Result<(), Box<dyn Error>> {
+async fn run_tutorial() {
     test_web_api().await;
-    Ok(())
 }
-
-
-
 
 async fn test_web_api() -> Result<(), Box<dyn Error>> {
     get_github_metrics().await;
