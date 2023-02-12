@@ -18,7 +18,7 @@ class RepoAnalyzer:
         func.restype = ctypes.c_char_p
         func()
 
-    def print_score_from_url(self, url: str):
+    def print_score_from_url(self):
         func = self.lib.print_score_from_url
         func(url)
 
