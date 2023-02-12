@@ -121,17 +121,36 @@ async fn run_url(filename: &str) {
         let owner = &data[0];
         let package = &data[1];
 
+        println!("Domain is {}", domain);
+        println!("owner is {}", owner);
+        println!("package is {}\n", package);
+
         if !domain.eq("npmjs") && !domain.eq("github"){
             println!("Domain must either be npmjs or github!\n");
             continue;
         }
 
         if domain.eq("npmjs") {
-            let github_link = match rest_api::npmjs_get_repository_link(&data[0], &data[1]).await {
-                Ok(link) => link,
+            let github_link = match rest_api::npmjs_get_repository_link(owner, package).await {
+                Ok(github_link) => github_link,
                 Err(e) => panic!("Failed couldn't get github_link\n"),
             };
+
+            let (git_domain, git_data) = url_input::get_data(&github_link);
+            //owner = &git_data[0];
+            //package = &git_data[1];
+
+            println!("Domain is {}", domain);
+            println!("github_link is {}", github_link);
+            println!("owner is {}", git_data[0]);
+            println!("package is {}\n", git_data[1]);
+
+            let metrics = rest_api::github_get_metrics(git_data[0],git_data[1]).await;
+            repos.add_repo(repo_list::Repo {url: repo_url, ..Default::default()});
+            continue;
+
         }
+        
         // SHOULD WE SET THE GITHUB_TOKEN ENVIRONMENT VAR IN THE PROGRAM?
 
         let metrics = rest_api::github_get_metrics(owner,package).await;
@@ -144,7 +163,7 @@ async fn run_url(filename: &str) {
     }
 
     repos.sort_by_net_score(); // will sort the RepoList by trustworthiness.
-    repos.display(); // will print RepoList to stdout in the desired format!
+    repos.display(); // will print RepoList to stdout in the desired format.
 }
 
 fn run_help() {
