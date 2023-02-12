@@ -149,9 +149,15 @@ async fn run_url(filename: &str) {
             let codebase_length = rest_api::github_get_codebase_length(owner , package).await.unwrap();
             println!("code len: {}", codebase_length);
 
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> 5b20d01a74dc6f8b4798a1ab18de6657d27f5123
             let opened_issues = rest_api::github_get_open_issues(owner , package).await.unwrap();
             println!("open issues: {}", opened_issues);
 
+=======
+>>>>>>> 5c6ab0f9aa7a809aa3826ec9b39c4c14cec5daa9
             let metrics = rest_api::github_get_metrics(&git_data[0],&git_data[1]).await;
             repos.add_repo(repo_list::Repo {url: repo_url, ..Default::default()});
             continue;
