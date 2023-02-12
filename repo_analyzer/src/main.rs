@@ -145,7 +145,7 @@ async fn run_url(filename: &str) {
             println!("owner is {}", git_data[0]);
             println!("package is {}\n", git_data[1]);
 
-            let metrics = rest_api::github_get_metrics(git_data[0],git_data[1]).await;
+            let metrics = rest_api::github_get_metrics(&git_data[0],&git_data[1]).await;
             repos.add_repo(repo_list::Repo {url: repo_url, ..Default::default()});
             continue;
 

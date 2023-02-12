@@ -21,7 +21,7 @@ pub async fn npmjs_get_repository_link(owner: &str, repository: &str) -> Result<
     // docs of the api to call to get the github link
     // https://api-docs.npms.io/#api-Package
 
-    let request_url_str = format!("https://api.npms.io/v2/package/{owner}/{repository}", owner=owner, repository=repository);
+    let request_url_str = format!("https://api.npms.io/v2/package/{repository}", repository=repository);
 
     let client = Client::new();
     // Send a GET request to the NPMS API URL
@@ -307,6 +307,9 @@ fn github_get_api_token() -> Result<String, VarError> {
 async fn github_get_license_from_contents_response(owner: &str, repository: &str, content_arr: &Vec<serde_json::Value>) -> Result<String, Box<dyn Error>> {
     // this function assumes that the content_arr passed to it is an array of object which contain information on files in the repository
 
+    println!("{:#?}",content_arr);
+    println!("{}",owner);
+    println!("{}",repository);
 
     // look for key words in file/dir names in base directory
     // eg.: 'license' or names of licenses
@@ -398,6 +401,7 @@ async fn github_get_license_from_contents_response(owner: &str, repository: &str
         // STEP 2.1: if license name is located in a file, get the file contents, convert from base64, then find the license
 
         // get file contents
+        println!("license file: {}", license_file);
         let path = format!("{}/contents/{}", repository, license_file);
         let contents_res = github_get_response_body(owner, &path, None).await;
         if contents_res.is_err() {
