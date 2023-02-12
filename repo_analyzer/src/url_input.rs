@@ -26,8 +26,8 @@ pub fn get_data(url: &str) -> (String, Vec<String>) {
         
         return (domain.to_owned(), split);
     } else {
-        eprintln!("Invalid URL: {}", url);
-        std::process::exit(1);
+        // returns an empty string for both expected arguments
+        return ("".to_string(), vec!["".to_string(); 2]);
     }
 }
 
