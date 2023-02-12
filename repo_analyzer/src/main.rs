@@ -148,7 +148,6 @@ async fn run_url(filename: &str) {
 
             println!("code len: {}", rest_api::github_get_codebase_length(owner , package).await.unwrap());
 
-
             let metrics = rest_api::github_get_metrics(&git_data[0],&git_data[1]).await;
             repos.add_repo(repo_list::Repo {url: repo_url, ..Default::default()});
             continue;

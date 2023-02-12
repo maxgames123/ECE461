@@ -88,7 +88,7 @@ pub async fn github_get_codebase_length(owner: &str, repository: &str) -> Result
     }
     let response = response_res.unwrap();
 
-    println!("{:#?}", response);
+    // println!("{:#?}", response);
 
     let codebase_length_res = response.get("size");
     if codebase_length_res.is_none() {
@@ -99,6 +99,30 @@ pub async fn github_get_codebase_length(owner: &str, repository: &str) -> Result
         return Err(panic!("Failed to get codebase size of {}/{}", owner, repository));
     }
     Ok(format!("{}", codebase_length_val.unwrap()))
+}
+
+
+pub async fn github_get_open_issues(owner: &str, repository: &str) -> Result<String, String> {
+
+
+    let response_res = github_get_response_body(owner, repository, None).await;
+    if response_res.is_err() {
+        return Err(response_res.err().unwrap().to_string())
+    }
+    let response = response_res.unwrap();
+
+    let open_issues_res = response.get("open_issues_count");
+    if open_issues_res.is_none() {
+        return Err(format!("Failed to get number of open issues of {}/{}", owner, repository));
+    }
+
+    let open_issues_val = open_issues_res.unwrap().as_i64();
+    if open_issues_val.is_none() {
+        return Err(format!("Failed to get number of open issues of {}/{}", owner, repository));
+    }
+
+    Ok(format!("{}", open_issues_val.unwrap()))
+
 }
 
 
@@ -330,9 +354,9 @@ fn github_get_api_token() -> Result<String, VarError> {
 async fn github_get_license_from_contents_response(owner: &str, repository: &str, content_arr: &Vec<serde_json::Value>) -> Result<String, Box<dyn Error>> {
     // this function assumes that the content_arr passed to it is an array of object which contain information on files in the repository
 
-    println!("{:#?}",content_arr);
-    println!("{}",owner);
-    println!("{}",repository);
+    // println!("{:#?}",content_arr);
+    // println!("{}",owner);
+    // println!("{}",repository);
 
     // look for key words in file/dir names in base directory
     // eg.: 'license' or names of licenses
