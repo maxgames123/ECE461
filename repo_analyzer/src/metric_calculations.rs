@@ -1,7 +1,11 @@
-pub fn get_ramp_up_time(url: &str) -> f32 {
-    let docsLength = getDocsLength(url);
-    let codebaseLength = getCodebaseLength(url);
-    docsLength as f32 / codebaseLength  as f32
+fn normalize(value: f32, range: i32) -> f32 {
+    value / range
+}
+
+
+pub fn get_ramp_up_time(codebase_length: &str) -> f32 {
+    let codebase_length = match codebase_length.parse::<f32>();
+
 }
 
 pub fn get_correctness(url: &str) -> f32 {
