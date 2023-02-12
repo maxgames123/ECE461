@@ -121,9 +121,9 @@ async fn run_url(filename: &str) {
         let mut owner = data[0].as_str();
         let mut package = data[1].as_str();
 
-        println!("Domain is {}", domain);
-        println!("owner is {}", owner);
-        println!("package is {}\n", package);
+        // println!("Domain is {}", domain);
+        // println!("owner is {}", owner);
+        // println!("package is {}\n", package);
 
         if !domain.eq("npmjs") && !domain.eq("github"){
             println!("Domain must either be npmjs or github!\n");
@@ -140,14 +140,21 @@ async fn run_url(filename: &str) {
             owner = git_data[0].as_str();
             package = git_data[1].as_str();
 
-            println!("Domain is {}", domain);
-            println!("github_link is {}", github_link);
-            println!("owner is {}", git_data[0]);
-            println!("package is {}\n", git_data[1]);
+            // println!("Domain is {}", domain);
+            // println!("github_link is {}", github_link);
+            // println!("owner is {}", git_data[0]);
+            // println!("package is {}\n", git_data[1]);
 
 
-            println!("code len: {}", rest_api::github_get_codebase_length(owner , package).await.unwrap());
+            let codebase_length = rest_api::github_get_codebase_length(owner , package).await.unwrap();
+            println!("code len: {}", codebase_length);
 
+<<<<<<< HEAD
+            let opened_issues = rest_api::github_get_open_issues(owner , package).await.unwrap();
+            println!("open issues: {}", opened_issues);
+
+=======
+>>>>>>> 5c6ab0f9aa7a809aa3826ec9b39c4c14cec5daa9
             let metrics = rest_api::github_get_metrics(&git_data[0],&git_data[1]).await;
             repos.add_repo(repo_list::Repo {url: repo_url, ..Default::default()});
             continue;
@@ -156,7 +163,13 @@ async fn run_url(filename: &str) {
         
         // SHOULD WE SET THE GITHUB_TOKEN ENVIRONMENT VAR IN THE PROGRAM?
 
-        let metrics = rest_api::github_get_metrics(owner,package).await;
+        let codebase_length = rest_api::github_get_codebase_length(owner , package).await.unwrap();
+        println!("code len: {}", codebase_length);
+
+        let opened_issues = rest_api::github_get_open_issues(owner , package).await.unwrap();
+        println!("open issues: {}", opened_issues);
+
+        //let metrics = rest_api::github_get_metrics(owner,package).await;
         repos.add_repo(repo_list::Repo {url: repo_url, ..Default::default()});
 
         // What we should do here:
