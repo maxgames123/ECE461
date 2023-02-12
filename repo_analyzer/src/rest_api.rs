@@ -24,7 +24,7 @@ pub async fn npmjs_get_repository_link(owner: &str, repository: &str) -> Result<
     let request_url_str = format!("https://api.npms.io/v2/package/{repository}", repository=repository);
 
     let client = Client::new();
-    // Send a GET request to the NPMS API URL
+    // Send a GET request to the NPM's API URL
     let res = client
         .get(request_url_str)
         .send().await?;
@@ -81,6 +81,27 @@ pub async fn npmjs_get_repository_link(owner: &str, repository: &str) -> Result<
 }
 
 
+pub async fn github_get_codebase_length(owner: &str, repository: &str) -> Result<String, String> {
+    let response_res = github_get_response_body(owner, repository, None).await;
+    if response_res.is_err() {
+        return Err(response_res.err().unwrap().to_string())
+    }
+    let response = response_res.unwrap();
+
+    println!("{:#?}", response);
+
+    let codebase_length_res = response.get("size");
+    if codebase_length_res.is_none() {
+        return Err(panic!("Failed to get codebase size of {}/{}", owner, repository));
+    }
+    let codebase_length_val = codebase_length_res.unwrap().as_i64();
+    if codebase_length_val.is_none() {
+        return Err(panic!("Failed to get codebase size of {}/{}", owner, repository));
+    }
+    Ok(format!("{}", codebase_length_val.unwrap()))
+}
+
+
 ///
 /// # Info
 /// Returns a HashMap<String, String> with the following keys:
@@ -122,6 +143,7 @@ pub async fn github_get_metrics(owner: &str, repository: &str) -> Result<HashMap
         return Err(response_res.err().unwrap())
     }
     let response = response_res.unwrap();
+
 
     let codebase_length_res = response.get("size");
     if codebase_length_res.is_none() {
@@ -206,6 +228,7 @@ pub async fn github_get_response_body(owner: &str, repository: &str, headers: Op
         return Err(Box::try_from(response_res.err().unwrap()).unwrap());
     }
     let response = response_res.unwrap();
+    // println!("{:#?}", response);
     let response_text_res = response.text().await;
     if response_text_res.is_err() {
         return Err(Box::try_from(response_text_res.err().unwrap()).unwrap())
@@ -401,7 +424,7 @@ async fn github_get_license_from_contents_response(owner: &str, repository: &str
         // STEP 2.1: if license name is located in a file, get the file contents, convert from base64, then find the license
 
         // get file contents
-        println!("license file: {}", license_file);
+        // println!("license file: {}", license_file);
         let path = format!("{}/contents/{}", repository, license_file);
         let contents_res = github_get_response_body(owner, &path, None).await;
         if contents_res.is_err() {
@@ -451,12 +474,16 @@ fn github_get_readme_from_contents_response(owner: &str, repository: &str, conte
 
     // look for 'readme', 'readme.txt', or 'readme.md'
     //
-    // for file_val in content_arr {
-    //     if file_val.
-    // }
-    //
+    for file_val in content_arr {
+        let file_res = file_val.as_str();
+    }
 
 
     Ok("readme not implemented yet".to_owned())
 }
 
+//
+// fn errorlog(error: &str) -> Box<dyn Error> {
+//     println!("error");
+//     Err(Box::new())
+// }
