@@ -131,13 +131,10 @@ async fn run_url(filename: &str) {
                 Ok(link) => link,
                 Err(e) => panic!("Failed couldn't get github_link\n"),
             };
-            let npm_metrics = rest_api::github_get_metrics(owner,package).await;
         }
         // SHOULD WE SET THE GITHUB_TOKEN ENVIRONMENT VAR IN THE PROGRAM?
 
-        let git_metrics = rest_api::github_get_metrics(owner,package).await;
-
-
+        let metrics = rest_api::github_get_metrics(owner,package).await;
         repos.add_repo(repo_list::Repo {url: repo_url, ..Default::default()});
 
         // What we should do here:
