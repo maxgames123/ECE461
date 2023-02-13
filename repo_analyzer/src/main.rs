@@ -133,8 +133,15 @@ async fn run_url(filename: &str) {
         if domain.eq("npmjs") {
             let github_link = match rest_api::npmjs_get_repository_link(owner, package).await {
                 Ok(github_link) => github_link,
-                Err(e) => panic!("Failed couldn't get github_link\n"),
+                Err(e) => ""
             };
+
+            if github_link.eq("") {
+                // The function failed to get the github link so it returns ""
+                // adds an entry
+                repos.add_repo(repo_list::Repo {url: repo_url, ..Default::default()});
+                continue;
+            }
 
             let (git_domain, git_data) = url_input::get_data(&github_link);
             owner = git_data[0].as_str();
