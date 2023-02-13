@@ -38,7 +38,7 @@ pub async fn npmjs_get_repository_link(owner: &str, repository: &str) -> Result<
 
     let json_obj_res = serde_json::from_str(&result_text);
     if json_obj_res.is_err() {
-        return Err(json_obj_res.unwrap_err().to_String());
+        return Err(json_obj_res.unwrap_err().to_string());
     }
 
     let json_obj: serde_json::Value = json_obj_res.unwrap();
