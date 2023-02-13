@@ -10,8 +10,8 @@ mod repo_analyzer_logger;
 
 use std::error::Error;
 use std::process::Command;
-use std::ptr::null;
-use crate::repo_analyzer_logger::Logger;
+//use std::ptr::null;
+//use crate::repo_analyzer_logger::Logger;
 
 // run test_web_api().await to run different examples of using the rest_api functions.
 // Make sure to set your github token in your environmental variables under the name 'GITHUB_TOKEN'
@@ -113,7 +113,7 @@ fn run_test() {
 
 async fn run_url(filename: &str) {
     
-    let mut logger: repo_analyzer_logger::Logger = match repo_analyzer_logger::Logger::fromEnvVar("LOG_FILE") {
+    let mut logger: repo_analyzer_logger::Logger = match repo_analyzer_logger::Logger::from_env_var("LOG_FILE") {
         Ok(res) => { res }
         Err( _ ) => { repo_analyzer_logger::Logger::new("log.txt").unwrap() }
     };
@@ -217,7 +217,7 @@ async fn run_url(filename: &str) {
             l =  0.0;
             logger.log_error(&format!("Failed to get license from {}/{}", &owner, &package));
         }
-        let mut rm = metric_calculations::get_responsive_maintainer();
+        let rm = metric_calculations::get_responsive_maintainer();
 
 
 

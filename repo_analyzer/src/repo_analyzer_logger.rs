@@ -1,17 +1,16 @@
 use std::fs::{File, OpenOptions};
-use std::process::Command;
-use std::{env, fs};
+//use std::process::Command;
+use std::{env};
 use std::io::Write;
-use std::path::Path;
-use log::logger;
+//use std::path::Path;
+//use log::logger;
 
 pub struct Logger {
-    file_path: String,
     file: File
 }
 impl Logger {
     // LOG_LEVEL
-    pub fn fromEnvVar(var: &str) -> Result<Self, String>{
+    pub fn from_env_var(var: &str) -> Result<Self, String>{
         let res = env::var(var);
         if res.is_err() {
             // println!("${} is not set in Enviromental Variables", var);
@@ -35,7 +34,7 @@ impl Logger {
         // }
         // let file = file_res.unwrap();
 
-        let mut file_res = OpenOptions::new()
+        let file_res = OpenOptions::new()
         .create(true)
         .append(true)
         .open(log_file);
@@ -46,28 +45,28 @@ impl Logger {
 
         let file = file_res.unwrap();
 
-        Ok(Logger { file_path: log_file.to_owned(), file })
+        Ok(Logger {file })
     }
 
     pub fn log_info(self: &mut Logger, msg: &str) {
         let full_msg = format!("[INFO]: {}\n", msg);
-        // println!("{}",full_msg);
-        //fs::write(&self.file_path, full_msg);
-        self.file.write(full_msg.as_bytes());
-        // self.log_file.write(full_msg.as_ref());
+        match self.file.write(full_msg.as_bytes()) {
+            Ok(_) => return,
+            Err(_e) => return,
+        }
     }
     pub fn log_warning(self: &mut Logger, msg: &str) {
         let full_msg = format!("[WARNING]: {}\n", msg);
-        // println!("{}",full_msg);
-        //fs::write(&self.file_path, full_msg);
-        self.file.write(full_msg.as_bytes());
-        // self.log_file.write(full_msg.as_ref());
+        match self.file.write(full_msg.as_bytes()) {
+            Ok(_) => return,
+            Err(_e) => return,
+        }
     }
     pub fn log_error(self: &mut Logger, msg: &str) {
         let full_msg = format!("[ERROR]: {}\n",msg);
-        // println!("{}",full_msg);
-        //fs::write(&self.file_path, full_msg);
-        self.file.write(full_msg.as_bytes());
-        // self.log_file.write(full_msg.as_ref());
+        match self.file.write(full_msg.as_bytes()) {
+            Ok(_) => return,
+            Err(_e) => return,
+        }
     }
 }
