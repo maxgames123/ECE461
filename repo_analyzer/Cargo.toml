@@ -1,11 +1,11 @@
 [package]
-name = "run"
+name = "repo_analyzer"
 version = "0.1.0"
 authors = ["Kevin Loiselle", "Omar Tounsi", "Zach Liao", "Maximilian Manzhosov"]
 edition = "2021"
 
 [lib]
-name = "run"
+name = "repo_analyzer"
 crate-type = ["dylib"]
 
 [dependencies]
