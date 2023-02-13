@@ -2,10 +2,7 @@
 
 Project Members:
 
-Maximilian Manzhosov  
-
-Kevin Loiselle  
-
+Maximilian Manzhosov 
+Kevin Loiselle
 Zach Liao
-
 Omar Tounsi
