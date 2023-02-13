@@ -17,7 +17,7 @@ use base64::{ Engine, engine::general_purpose };
 /// * 'url' - The full npmjs url you want the associated github link of
 ///
 // Retrieves the GitHub link for a npmjs package
-pub async fn npmjs_get_repository_link(owner: &str, repository: &str) -> Result<String, Box<dyn Error>> {
+pub async fn npmjs_get_repository_link(owner: &str, repository: &str) -> Result<String, String> {
     // docs of the api to call to get the github link
     // https://api-docs.npms.io/#api-Package
 
@@ -31,42 +31,42 @@ pub async fn npmjs_get_repository_link(owner: &str, repository: &str) -> Result<
 
     let result_text_res = res.text().await;
     if result_text_res.is_err() {
-        return Err(Box::try_from(result_text_res.unwrap_err()).unwrap());
+        return Err(result_text_res.unwrap_err().to_string());
     }
 
     let result_text = result_text_res.unwrap().to_owned();
 
     let json_obj_res = serde_json::from_str(&result_text);
     if json_obj_res.is_err() {
-        return Err(Box::try_from(json_obj_res.unwrap_err()).unwrap());
+        return Err(json_obj_res.unwrap_err().to_String());
     }
 
     let json_obj: serde_json::Value = json_obj_res.unwrap();
     // println!("{:#?}", json_obj);
     let json_collected_res = json_obj.get("collected");
     if json_collected_res.is_none() {
-        return Err(panic!("Failed to get repository link from npmjs package{}", repository));
+        return Err(format!("Failed to get repository link from npmjs package{}", repository));
     }
     let json_metadata_res = json_collected_res.unwrap().get("metadata");
     if json_metadata_res.is_none() {
-        return Err(panic!("Failed to get repository link from npmjs package{}", repository));
+        return Err(format!("Failed to get repository link from npmjs package{}", repository));
     }
     let json_links_res = json_metadata_res.unwrap().get("links");
     if json_links_res.is_none() {
-        return Err(panic!("Failed to get repository link from npmjs package{}", repository));
+        return Err(format!("Failed to get repository link from npmjs package{}", repository));
     }
     let json_repository_res = json_links_res.unwrap().get("repository");
     if json_repository_res.is_none() {
-        return Err(panic!("Failed to get repository link from npmjs package{}", repository));
+        return Err(format!("Failed to get repository link from npmjs package{}", repository));
     }
     let repo_link_res = json_repository_res.unwrap().as_str();
     if repo_link_res.is_none() {
-        return Err(panic!("Failed to get repository link from npmjs package{}", repository));
+        return Err(format!("Failed to get repository link from npmjs package{}", repository));
     }
     let repo_link_str = repo_link_res.unwrap();
 
     if !repo_link_str.contains("github.com") {
-        return Err(panic!("Failed to retrieve a Github link from npmjs package{}", repository));
+        return Err(format!("Failed to retrieve a Github link from npmjs package{}", repository));
     } 
 
     // Retrieves the Github URL in the API's return json object "repository" field
@@ -92,11 +92,11 @@ pub async fn github_get_codebase_length(owner: &str, repository: &str) -> Result
 
     let codebase_length_res = response.get("size");
     if codebase_length_res.is_none() {
-        return Err(panic!("Failed to get codebase size of {}/{}", owner, repository));
+        return Err(format!("Failed to get codebase size of {}/{}", owner, repository));
     }
     let codebase_length_val = codebase_length_res.unwrap().as_i64();
     if codebase_length_val.is_none() {
-        return Err(panic!("Failed to get codebase size of {}/{}", owner, repository));
+        return Err(format!("Failed to get codebase size of {}/{}", owner, repository));
     }
     Ok(format!("{}", codebase_length_val.unwrap()))
 }
@@ -157,7 +157,7 @@ pub async fn github_get_license(owner: &str, repository: &str) -> Result<String,
     let contents_response = contents_response_res.unwrap();
     let contents_arr_res = contents_response.as_array();
     if contents_arr_res.is_none() {
-        return Err(panic!("Failed to get contents of Github repository: {}/{}", owner, repository));
+        return Err(format!("Failed to get contents of Github repository: {}/{}", owner, repository));
     }
 
     let contents_arr = contents_arr_res.unwrap();
@@ -194,7 +194,7 @@ pub async fn github_get_license(owner: &str, repository: &str) -> Result<String,
 ///
 /// * repository: &str -        The name of the repository
 ///
-pub async fn github_get_metrics(owner: &str, repository: &str) -> Result<HashMap<String, String>, Box<dyn Error>> {
+pub async fn github_get_metrics(owner: &str, repository: &str) -> Result<HashMap<String, String>, String> {
 // metrics:
 // license - not done
 // codebase_length - done
@@ -209,18 +209,18 @@ pub async fn github_get_metrics(owner: &str, repository: &str) -> Result<HashMap
     // get codebase length
     let response_res = github_get_response_body(owner, repository, None).await;
     if response_res.is_err() {
-        return Err(response_res.err().unwrap())
+        return Err(response_res.err().unwrap().to_string())
     }
     let response = response_res.unwrap();
 
 
     let codebase_length_res = response.get("size");
     if codebase_length_res.is_none() {
-        return Err(panic!("Failed to get codebase size of {}/{}", owner, repository));
+        return Err(format!("Failed to get codebase size of {}/{}", owner, repository));
     }
     let codebase_length_val = codebase_length_res.unwrap().as_i64();
     if codebase_length_val.is_none() {
-        return Err(panic!("Failed to get codebase size of {}/{}", owner, repository));
+        return Err(format!("Failed to get codebase size of {}/{}", owner, repository));
     }
     metrics.insert(String::from("codebase_length"), format!("{}", codebase_length_val.unwrap()));
 
@@ -228,12 +228,12 @@ pub async fn github_get_metrics(owner: &str, repository: &str) -> Result<HashMap
     // get # opened issues
     let open_issues_res = response.get("open_issues_count");
     if open_issues_res.is_none() {
-        return Err(panic!("Failed to get number of open issues of {}/{}", owner, repository));
+        return Err(format!("Failed to get number of open issues of {}/{}", owner, repository));
     }
 
     let open_issues_val = open_issues_res.unwrap().as_i64();
     if open_issues_val.is_none() {
-        return Err(panic!("Failed to get number of open issues of {}/{}", owner, repository));
+        return Err(format!("Failed to get number of open issues of {}/{}", owner, repository));
     }
 
     metrics.insert(String::from("open_issues"), format!("{}", open_issues_val.unwrap()));
@@ -242,13 +242,13 @@ pub async fn github_get_metrics(owner: &str, repository: &str) -> Result<HashMap
     // get # commits
     let commits_response_res = github_get_response_body(owner, &commits_path, None).await;
     if commits_response_res.is_err() {
-        return Err(commits_response_res.err().unwrap());
+        return Err(commits_response_res.err().unwrap().to_string());
     }
 
     let commits_response = commits_response_res.unwrap();
     let commits_arr_res = commits_response.as_array();
     if commits_arr_res.is_none() {
-        return Err(panic!("Failed to get number of commits of {}/{}", owner, repository));
+        return Err(format!("Failed to get number of commits of {}/{}", owner, repository));
     }
     let commits_arr = commits_arr_res.unwrap();
 
@@ -256,24 +256,24 @@ pub async fn github_get_metrics(owner: &str, repository: &str) -> Result<HashMap
     // get license / README
     let contents_response_res = github_get_response_body(owner, &contents_path, None).await;
     if contents_response_res.is_err() {
-        return Err(contents_response_res.unwrap_err());
+        return Err(contents_response_res.unwrap_err().to_string());
     }
     let contents_response = contents_response_res.unwrap();
     let contents_arr_res = contents_response.as_array();
     if contents_arr_res.is_none() {
-        return Err(panic!("Failed to get contents of Github repository: {}/{}", owner, repository));
+        return Err(format!("Failed to get contents of Github repository: {}/{}", owner, repository));
     }
 
     let contents_arr = contents_arr_res.unwrap();
 
     let license_res = github_get_license_from_contents_response(owner, repository, contents_arr).await;
     if license_res.is_err() {
-        return Err(license_res.err().unwrap())
+        return Err(license_res.err().unwrap().to_string())
     }
     let license_str = license_res.unwrap();
     let readme_res = github_get_readme_from_contents_response(owner, repository, contents_arr);
     if readme_res.is_err() {
-        return Err(readme_res.err().unwrap());
+        return Err(readme_res.err().unwrap().to_string());
     }
     let readme_str = readme_res.unwrap();
     // TODO: convert contents from base64 to ascii then find line count
@@ -291,22 +291,22 @@ pub async fn github_get_metrics(owner: &str, repository: &str) -> Result<HashMap
 ///
 /// # Arguments
 ///
-pub async fn github_get_response_body(owner: &str, repository: &str, headers: Option<HeaderMap>) -> Result<serde_json::Value, Box<dyn Error>> {
+pub async fn github_get_response_body(owner: &str, repository: &str, headers: Option<HeaderMap>) -> Result<serde_json::Value, String> {
     let response_res = github_get_response(owner, repository, headers).await;
     if response_res.is_err() {
-        return Err(Box::try_from(response_res.err().unwrap()).unwrap());
+        return Err(response_res.err().unwrap().to_string());
     }
     let response = response_res.unwrap();
     // println!("{:#?}", response);
     let response_text_res = response.text().await;
     if response_text_res.is_err() {
-        return Err(Box::try_from(response_text_res.err().unwrap()).unwrap())
+        return Err(response_text_res.err().unwrap().to_string())
     }
 
     let response_text = response_text_res.unwrap().to_owned();
     let response_json_res = serde_json::from_str(&response_text);
     if response_json_res.is_err() {
-        return Err(Box::from(response_json_res.err().unwrap()))
+        return Err(response_json_res.err().unwrap().to_string())
     }
     let response_json = response_json_res.unwrap();
 
@@ -322,10 +322,10 @@ pub async fn github_get_response_body(owner: &str, repository: &str, headers: Op
 /// * 'owner'      :&str - The username of the owner of the repository
 /// * 'repository' :&str - The name of the repository
 ///
-pub async fn github_get_status(owner: &str, repository: &str) -> Result<StatusCode, Box<dyn Error>> {
+pub async fn github_get_status(owner: &str, repository: &str) -> Result<StatusCode, String> {
     let response_res = github_get_response(owner, repository, None).await;
     if response_res.is_err() {
-        return Err(Box::try_from(response_res.err().unwrap()).unwrap());
+        return Err(response_res.err().unwrap().to_string());
     }
     Ok(response_res.unwrap().status().to_owned())
 }
@@ -336,7 +336,7 @@ pub async fn github_get_status(owner: &str, repository: &str) -> Result<StatusCo
 ///
 /// # Arguments
 ///
-pub async fn github_get_response(owner: &str, repository: &str, headers: Option<HeaderMap>) -> Result<Response, Box<dyn Error>> {
+pub async fn github_get_response(owner: &str, repository: &str, headers: Option<HeaderMap>) -> Result<Response, String> {
     let mut owner_mut = String::from(owner);
     let mut repo_mut = String::from(repository);
     if !owner.is_empty() {
@@ -348,7 +348,7 @@ pub async fn github_get_response(owner: &str, repository: &str, headers: Option<
     let url = format!("https://api.github.com/repos{}{}", owner_mut, repo_mut);
     let token_res = github_get_api_token();
     if token_res.is_err() {
-        return Err(Box::try_from(token_res.err().unwrap()).unwrap());
+        return Err(token_res.err().unwrap().to_string());
     }
     let token = token_res.unwrap();
 
@@ -369,7 +369,7 @@ pub async fn github_get_response(owner: &str, repository: &str, headers: Option<
     // std::thread::sleep(time::Duration::from_millis(10));
     let response_res = request_builder.send().await;
     if response_res.is_err() {
-        return Err(Box::try_from(response_res.err().unwrap()).unwrap());
+        return Err(response_res.err().unwrap().to_string());
     }
     let response = response_res.unwrap();
     // println!("{:#?}", response);
@@ -396,7 +396,7 @@ fn github_get_api_token() -> Result<String, VarError> {
 
 // returns a string with the name of the license if it is found
 // returns a blank string if no license is found
-async fn github_get_license_from_contents_response(owner: &str, repository: &str, content_arr: &Vec<serde_json::Value>) -> Result<String, Box<dyn Error>> {
+async fn github_get_license_from_contents_response(owner: &str, repository: &str, content_arr: &Vec<serde_json::Value>) -> Result<String, String> {
     // this function assumes that the content_arr passed to it is an array of object which contain information on files in the repository
 
     // println!("{:#?}",content_arr);
@@ -418,18 +418,18 @@ async fn github_get_license_from_contents_response(owner: &str, repository: &str
 
         let file_res = file_val.as_object();
         if file_res.is_none() {
-            return Err(panic!("Failed to get the license of {}/{}", owner, repository))
+            return Err(format!("Failed to get the license of {}/{}", owner, repository))
         }
         let file = file_res.unwrap();
 
         // get file type
         let filetype_res = file.get("type");
         if filetype_res.is_none() {
-            return Err(panic!("Failed to get the license of {}/{}", owner, repository));
+            return Err(format!("Failed to get the license of {}/{}", owner, repository));
         }
         let filetype_val = filetype_res.unwrap().as_str();
         if filetype_val.is_none() {
-            return Err(panic!("Failed to get the license of {}/{}", owner, repository));
+            return Err(format!("Failed to get the license of {}/{}", owner, repository));
         }
         let filetype = filetype_val.unwrap();
 
@@ -441,22 +441,22 @@ async fn github_get_license_from_contents_response(owner: &str, repository: &str
         // get path
         let path_res = file.get("path");
         if path_res.is_none() {
-            return Err(panic!("Failed to get the license of {}/{}", owner, repository));
+            return Err(format!("Failed to get the license of {}/{}", owner, repository));
         }
         let path_val = path_res.unwrap().as_str();
         if path_val.is_none() {
-            return Err(panic!("Failed to get the license of {}/{}", owner, repository));
+            return Err(format!("Failed to get the license of {}/{}", owner, repository));
         }
         let path = path_val.unwrap();
 
 
         let name_res = file.get("name");
         if name_res.is_none() {
-            return Err(panic!("Failed to get the license of {}/{}", owner, repository));
+            return Err(format!("Failed to get the license of {}/{}", owner, repository));
         }
         let name_val = name_res.unwrap().as_str();
         if name_val.is_none() {
-            return Err(panic!("Failed to get the license of {}/{}", owner, repository));
+            return Err(format!("Failed to get the license of {}/{}", owner, repository));
         }
         let name = name_val.unwrap();
         let name_lower = name.to_lowercase();
@@ -502,19 +502,19 @@ async fn github_get_license_from_contents_response(owner: &str, repository: &str
         let contents_val = contents_res.unwrap();
         let contents_obj = contents_val.as_object();
         if contents_obj.is_none() {
-            return Err(panic!("Failed to get license from filename for {}/{}", owner, repository));
+            return Err(format!("Failed to get license from filename for {}/{}", owner, repository));
         }
         let contents = contents_obj.unwrap();
 
         let file_contents_res = contents.get("content");
         if file_contents_res.is_none() {
-            return Err(panic!("Failed to get license from filename for {}/{}", owner, repository));
+            return Err(format!("Failed to get license from filename for {}/{}", owner, repository));
         }
         let file_contents_val = file_contents_res.unwrap();
 
         let file_contents_base64_res = file_contents_val.as_str();
         if file_contents_base64_res.is_none() {
-            return Err(panic!("Failed to get license from filename for {}/{}", owner, repository));
+            return Err(format!("Failed to get license from filename for {}/{}", owner, repository));
         }
         let mut file_contents_base64 = file_contents_base64_res.unwrap();
 
