@@ -30,14 +30,3 @@ pub fn get_data(url: &str) -> (String, Vec<String>) {
         return ("".to_string(), vec!["".to_string(); 2]);
     }
 }
-
-/*
-fn main() {
-    let url = "https://www.npmjs.com/package/request";
-    let (domain, data) = get_data(url);
-    println!("Root Domain: {}\nSubdirectories: {:?}", domain, data);
-    let owner = &data[0];
-    let package = &data[1];
-    println!("Owner: {}\nPackage: {}", owner, package);
-}
-*/
