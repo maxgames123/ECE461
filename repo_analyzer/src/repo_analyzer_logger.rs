@@ -1,4 +1,4 @@
-use std::fs::{File};
+use std::fs::{File, OpenOptions};
 use std::process::Command;
 use std::{env, fs};
 use std::io::Write;
@@ -42,6 +42,7 @@ impl Logger {
         let full_msg = format!("[INFO]: {}\n", msg);
         println!("{}",full_msg.to_owned());
         fs::write(&self.file_path, full_msg);
+
         // self.log_file.write(full_msg.as_ref());
     }
     pub fn log_warning(self: &mut Logger, msg: &str) {
