@@ -6,6 +6,7 @@ mod url_input;
 mod metric_calculations;
 mod rest_api;
 mod read_url_file;
+mod repo_analyzer_logger;
 
 use std::error::Error;
 use libc::c_char;
