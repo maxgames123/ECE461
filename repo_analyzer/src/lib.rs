@@ -1,89 +1,88 @@
-extern crate libc;
-extern crate core;
+// extern crate libc;
+// extern crate core;
 
-mod repo_list;
-mod url_input;
-mod metric_calculations;
-mod rest_api;
-mod read_url_file;
+// mod repo_list;
+// mod url_input;
+// mod metric_calculations;
+// mod rest_api;
+// mod read_url_file;
 
-use std::error::Error;
-use libc::c_char;
-use std::ffi::{CString, CStr};
-use std::process::Command;
+// use std::error::Error;
+// use libc::c_char;
+// use std::ffi::{CString, CStr};
 
-//  Followed instructions from:
-//  creating library:
-//  https://developers.redhat.com/blog/2017/11/16/speed-python-using-rust
-//  setting up library for python usage:
-//  https://docs.rs/cpython/latest/cpython/
+// //  Followed instructions from:
+// //  creating library:
+// //  https://developers.redhat.com/blog/2017/11/16/speed-python-using-rust
+// //  setting up library for python usage:
+// //  https://docs.rs/cpython/latest/cpython/
 
 
-// Example function on converting a C string to and from a rust string
-#[no_mangle]
-pub extern fn get_string(input: *const c_char) -> *mut c_char {
-    let input_str = unsafe {
-        assert!(!input.is_null());
-        CStr::from_ptr(input).to_str().unwrap()
-    };
-    let output_str = format!("{} rust", input_str);
-    let output = CString::new(output_str).unwrap();
-    output.into_raw()
-}
+// // Example function on converting a C string to and from a rust string
+// #[no_mangle]
+// pub extern fn get_string(input: *const c_char) -> *mut c_char {
+//     let input_str = unsafe {
+//         assert!(!input.is_null());
+//         CStr::from_ptr(input).to_str().unwrap()
+//     };
+//     let output_str = format!("{} rust", input_str);
+//     let output = CString::new(output_str).unwrap();
+//     output.into_raw()
+// }
 
-async fn run_tutorial() {
-    test_web_api().await;
-}
+// async fn run_tutorial() {
+//     test_web_api().await;
+// }
 
-async fn test_web_api() -> Result<(), Box<dyn Error>> {
-    get_github_metrics().await;
-    // get_response().await;
-    // get_status_code().await;
-    // get_body().await;
+// async fn test_web_api() -> Result<(), Box<dyn Error>> {
+//     get_github_metrics().await;
+//     // get_response().await;
+//     // get_status_code().await;
+//     // get_body().await;
 
-    Ok(())
-}
+//     Ok(())
+// }
 
-async fn get_github_metrics() -> Result<(), Box<dyn Error>> {
-    let v = rest_api::github_get_metrics(&tutorial_owner(), &tutorial_repo()).await;
-    // let v = rest_api::npmjs_get_repository_link("browserify").await;
-    println!("Github metrics:");
-    println!("{:#?}", v);
-    Ok(())
-}
+// async fn get_github_metrics() -> Result<(), Box<dyn Error>> {
+//     let v = rest_api::github_get_metrics(&tutorial_owner(), &tutorial_repo()).await;
+//     // let v = rest_api::npmjs_get_repository_link("browserify").await;
+//     println!("Github metrics:");
+//     println!("{:#?}", v);
+//     Ok(())
+// }
 
-async fn get_response() -> Result<(), Box<dyn Error>> {
-    let v = rest_api::github_get_response(&tutorial_owner(), &tutorial_repo(), None).await?;
-    println!("Response:");
-    println!("{:#?}", v);
-    Ok(())
-}
+// async fn get_response() -> Result<(), Box<dyn Error>> {
+//     let v = rest_api::github_get_response(&tutorial_owner(), &tutorial_repo(), None).await?;
+//     println!("Response:");
+//     println!("{:#?}", v);
+//     Ok(())
+// }
 
-async fn get_status_code() -> Result<(), Box<dyn Error>> {
-    let v = rest_api::github_get_status(&tutorial_owner(), &tutorial_repo()).await;
-    println!("Status code:");
-    println!("{}", v.unwrap().as_u16());
-    Ok(())
-}
+// async fn get_status_code() -> Result<(), Box<dyn Error>> {
+//     let v = rest_api::github_get_status(&tutorial_owner(), &tutorial_repo()).await;
+//     println!("Status code:");
+//     println!("{}", v.unwrap().as_u16());
+//     Ok(())
+// }
 
-async fn get_body() -> Result<(), Box<dyn Error>> {
+// async fn get_body() -> Result<(), Box<dyn Error>> {
 
-    let v = rest_api::github_get_response_body(&tutorial_owner(), &tutorial_repo(), None).await;
-    let body = v.unwrap();
-    println!("Response Body:");
-    println!("{:#?}", body);
-    println!("accessing values inside the body:");
-    println!("{:#?}", body[0]);
-    println!("{}", body[0]["id"]);
-    Ok(())
-}
+//     let v = rest_api::github_get_response_body(&tutorial_owner(), &tutorial_repo(), None).await;
+//     let body = v.unwrap();
+//     println!("Response Body:");
+//     println!("{:#?}", body);
+//     println!("accessing values inside the body:");
+//     println!("{:#?}", body[0]);
+//     println!("{}", body[0]["id"]);
+//     Ok(())
+// }
 
-fn tutorial_owner() -> String {
-    return "NationalSecurityAgency".to_owned();
-}
+// fn tutorial_owner() -> String {
+//     return "NationalSecurityAgency".to_owned();
+// }
 
-fn tutorial_repo() -> String {
-    return "ghidra".to_owned();
-    // rest_api::get_github_data(url);
-    // url_input::run(url);
-}
+// fn tutorial_repo() -> String {
+//     return "ghidra".to_owned();
+//     // rest_api::get_github_data(url);
+//     // url_input::run(url);
+// }
