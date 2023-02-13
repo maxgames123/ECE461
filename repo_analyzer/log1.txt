@@ -1,1 +1,0 @@
-[WARNING]: Failed to get number of open issues of lodash/lodash

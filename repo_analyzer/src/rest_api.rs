@@ -390,7 +390,7 @@ fn github_get_api_token() -> Result<String, VarError> {
     let name = "GITHUB_TOKEN";
     let res = env::var(name);
     if res.is_err() {
-        println!("${} is not set in Enviromental Variables", name);
+        //println!("${} is not set in Enviromental Variables", name);
         return Err(res.err().unwrap())
     }
     Ok(res.unwrap())
