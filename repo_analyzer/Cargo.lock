@@ -636,23 +636,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "repo_analyzer"
-version = "0.1.0"
-dependencies = [
- "async-recursion",
- "base64",
- "env_logger",
- "libc",
- "log",
- "regex 0.2.11",
- "reqwest",
- "serde",
- "serde_json",
- "substring",
- "tokio",
-]
-
-[[package]]
 name = "reqwest"
 version = "0.11.14"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -687,6 +670,23 @@ dependencies = [
  "wasm-bindgen-futures",
  "web-sys",
  "winreg",
+]
+
+[[package]]
+name = "run"
+version = "0.1.0"
+dependencies = [
+ "async-recursion",
+ "base64",
+ "env_logger",
+ "libc",
+ "log",
+ "regex 0.2.11",
+ "reqwest",
+ "serde",
+ "serde_json",
+ "substring",
+ "tokio",
 ]
 
 [[package]]

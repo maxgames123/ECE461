@@ -1,7 +1,6 @@
 use std::fs::{File, OpenOptions};
 use std::process::Command;
 use std::{env, fs};
-use std::fs::OpenOptions;
 use std::io::Write;
 use std::path::Path;
 use log::logger;
@@ -11,7 +10,7 @@ pub struct Logger {
     file: File
 }
 impl Logger {
-
+    // LOG_LEVEL
     pub fn fromEnvVar(var: &str) -> Result<Self, String>{
         let res = env::var(var);
         if res.is_err() {
@@ -52,29 +51,23 @@ impl Logger {
 
     pub fn log_info(self: &mut Logger, msg: &str) {
         let full_msg = format!("[INFO]: {}\n", msg);
-<<<<<<< HEAD
-        //println!("{}",full_msg.to_owned());
+        // println!("{}",full_msg);
         //fs::write(&self.file_path, full_msg);
-        self.file.write_all(full_msg.as_bytes());
-=======
-        println!("{}",full_msg.to_owned());
-        fs::write(&self.file_path, full_msg);
-
->>>>>>> 1d073151be5942aff9f5b8516ae46dac9752e980
+        self.file.write(full_msg.as_bytes());
         // self.log_file.write(full_msg.as_ref());
     }
     pub fn log_warning(self: &mut Logger, msg: &str) {
         let full_msg = format!("[WARNING]: {}\n", msg);
-        //println!("{}",full_msg.to_owned());
+        // println!("{}",full_msg);
         //fs::write(&self.file_path, full_msg);
-        self.file.write_all(full_msg.as_bytes());
+        self.file.write(full_msg.as_bytes());
         // self.log_file.write(full_msg.as_ref());
     }
     pub fn log_error(self: &mut Logger, msg: &str) {
         let full_msg = format!("[ERROR]: {}\n",msg);
-        //println!("{}",full_msg.to_owned());
+        // println!("{}",full_msg);
         //fs::write(&self.file_path, full_msg);
-        self.file.write_all(full_msg.as_bytes());
+        self.file.write(full_msg.as_bytes());
         // self.log_file.write(full_msg.as_ref());
     }
 }
