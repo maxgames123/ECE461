@@ -129,7 +129,7 @@ async fn run_url(filename: &str) {
         if domain.eq("npmjs") {
             let github_link = match rest_api::npmjs_get_repository_link(owner, package).await {
                 Ok(github_link) => github_link,
-                Err(e) => ""
+                Err(e) => "".to_owned()
             };
 
             if github_link.eq("") {
@@ -143,16 +143,32 @@ async fn run_url(filename: &str) {
             owner = git_data[0].as_str();
             package = git_data[1].as_str();
 
-            let codebase_length = rest_api::github_get_codebase_length(owner , package).await.unwrap();
+            let codebase_length = match rest_api::github_get_codebase_length(owner , package).await {
+                Ok(codebase_length) => codebase_length,
+                Err(e) => "0.0".to_owned()
+            };
+    
             println!("code len: {}", codebase_length);
-
-            let opened_issues = rest_api::github_get_open_issues(owner , package).await.unwrap();
+    
+            let opened_issues = match rest_api::github_get_open_issues(owner , package).await {
+                Ok(opened_issues) => opened_issues,
+                Err(e) => "0.0".to_owned()
+            };
+    
             println!("open issues: {}", opened_issues);
-
-            let license = rest_api::github_get_license(owner , package).await.unwrap();
+    
+            let license = match rest_api::github_get_license(owner , package).await {
+                Ok(license) => license,
+                Err(e) => "0.0".to_owned()
+            };
+    
             println!("license: {}", license);
-
-            let number_of_forks = rest_api::github_get_number_of_forks(owner , package).await.unwrap();
+    
+            let number_of_forks = match rest_api::github_get_number_of_forks(owner , package).await {
+                Ok(number_of_forks) => number_of_forks,
+                Err(e) => "0.0".to_owned()
+            };
+    
             println!("number_of_forks: {}", number_of_forks);
 
             let ru = metric_calculations::get_ramp_up_time(&codebase_length);
@@ -171,16 +187,32 @@ async fn run_url(filename: &str) {
         
         // SHOULD WE SET THE GITHUB_TOKEN ENVIRONMENT VAR IN THE PROGRAM?
 
-        let codebase_length = rest_api::github_get_codebase_length(owner , package).await.unwrap();
+        let codebase_length = match rest_api::github_get_codebase_length(owner , package).await {
+            Ok(codebase_length) => codebase_length,
+            Err(e) => "0.0".to_owned()
+        };
+
         println!("code len: {}", codebase_length);
 
-        let opened_issues = rest_api::github_get_open_issues(owner , package).await.unwrap();
+        let opened_issues = match rest_api::github_get_open_issues(owner , package).await {
+            Ok(opened_issues) => opened_issues,
+            Err(e) => "0.0".to_owned()
+        };
+
         println!("open issues: {}", opened_issues);
 
-        let license = rest_api::github_get_license(owner , package).await.unwrap();
+        let license = match rest_api::github_get_license(owner , package).await {
+            Ok(license) => license,
+            Err(e) => "0.0".to_owned()
+        };
+
         println!("license: {}", license);
 
-        let number_of_forks = rest_api::github_get_number_of_forks(owner , package).await.unwrap();
+        let number_of_forks = match rest_api::github_get_number_of_forks(owner , package).await {
+            Ok(number_of_forks) => number_of_forks,
+            Err(e) => "0.0".to_owned()
+        };
+
         println!("number_of_forks: {}", number_of_forks);
 
         let ru = metric_calculations::get_ramp_up_time(&codebase_length);
