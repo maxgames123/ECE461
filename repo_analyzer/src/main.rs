@@ -10,6 +10,8 @@ mod repo_analyzer_logger;
 
 use std::error::Error;
 use std::process::Command;
+use std::ptr::null;
+use crate::repo_analyzer_logger::Logger;
 
 // run test_web_api().await to run different examples of using the rest_api functions.
 // Make sure to set your github token in your environmental variables under the name 'GITHUB_TOKEN'
@@ -110,6 +112,11 @@ fn run_test() {
 }
 
 async fn run_url(filename: &str) {
+    // let logger = Logger::fromEnvVar("LOGGER_FILE");
+    let mut logger = Logger::new("C:/Users/kevin/Documents/school/ece461/ECE461/repo_analyzer/log1.txt").unwrap();
+
+    logger.log_info("Logger successfully loaded!");
+
     // Implement the run_url function here
 
     let url_list = read_url_file::read_lines(filename); // returns urls as a list of strings
@@ -121,14 +128,19 @@ async fn run_url(filename: &str) {
         let mut package = data[1].as_str();
 
         if !domain.eq("npmjs") && !domain.eq("github"){
-            println!("Domain must either be npmjs or github!\n");
+            logger.log_warning("Domain must either be npmjs or github!\n");
             continue;
         }
 
         if domain.eq("npmjs") {
             let github_link = match rest_api::npmjs_get_repository_link(owner, package).await {
-                Ok(github_link) => github_link,
-                Err(_e) => "".to_owned()
+                Ok(github_link) => {
+                    github_link
+                },
+                Err(_e) => {
+                    logger.log_error(&format!("{}", _e.as_str()));
+                    "".to_owned()
+                }
             };
 
             if github_link.eq("") {
@@ -144,37 +156,65 @@ async fn run_url(filename: &str) {
 
             let codebase_length = match rest_api::github_get_codebase_length(owner , package).await {
                 Ok(codebase_length) => codebase_length,
-                Err(_e) => "0.0".to_owned()
+                Err(_e) => {
+                    logger.log_warning(&format!("{}", _e.as_str()));
+                    "0.0".to_owned()
+                }
             };
     
             //println!("code len: {}", codebase_length);
     
             let opened_issues = match rest_api::github_get_open_issues(owner , package).await {
                 Ok(opened_issues) => opened_issues,
-                Err(_e) => "0.0".to_owned()
+                Err(_e) => {
+                    logger.log_warning(&format!("{}", _e.as_str()));
+                    "0.0".to_owned()
+                }
             };
     
             //println!("open issues: {}", opened_issues);
     
             let license = match rest_api::github_get_license(owner , package).await {
                 Ok(license) => license,
-                Err(_e) => "0.0".to_owned()
+                Err(_e) => {
+                    logger.log_warning(&format!("{}", _e.as_str()));
+                    "0.0".to_owned()
+                }
             };
     
             //println!("license: {}", license);
     
             let number_of_forks = match rest_api::github_get_number_of_forks(owner , package).await {
                 Ok(number_of_forks) => number_of_forks,
-                Err(_e) => "0.0".to_owned()
+                Err(_e) => {
+                    logger.log_warning(&format!("{}", _e.as_str()));
+                    "0.0".to_owned()
+                }
             };
     
             //println!("number_of_forks: {}", number_of_forks);
 
-            let ru = metric_calculations::get_ramp_up_time(&codebase_length);
-            let c = metric_calculations::get_correctness(&opened_issues);
-            let bf = metric_calculations::get_bus_factor(&number_of_forks);
-            let l = metric_calculations::get_license(&license);
-            let rm = metric_calculations::get_responsive_maintainer();
+            let mut ru = metric_calculations::get_ramp_up_time(&codebase_length);
+            if ru == -1.0 {
+                ru = 0.0;
+                logger.log_error(&format!("Failed to get ramp up time from {}/{}", owner, package));
+            }
+            let mut c = metric_calculations::get_correctness(&opened_issues);
+            if c == -1.0 {
+                c = 0.0;
+                logger.log_error(&format!("Failed to get number of open issues from {}/{}", owner, package));
+            }
+            let mut bf = metric_calculations::get_bus_factor(&number_of_forks);
+            if bf == -1.0 {
+                bf =  0.0;
+                logger.log_error(&format!("Failed to get number of forks from {}/{}", owner, package));
+            }
+            let mut l = metric_calculations::get_license(&license);
+            if l == -1.0 {
+                l =  0.0;
+                logger.log_error(&format!("Failed to get license from {}/{}", owner, package));
+            }
+            let mut rm = metric_calculations::get_responsive_maintainer();
 
             let metrics = [ru, c, bf, l]; // responsive maintainer is omitted
             let o = metric_calculations::get_overall(&metrics);
@@ -188,37 +228,67 @@ async fn run_url(filename: &str) {
 
         let codebase_length = match rest_api::github_get_codebase_length(owner , package).await {
             Ok(codebase_length) => codebase_length,
-            Err(_e) => "0.0".to_owned()
+            Err(_e) => {
+                logger.log_warning(&format!("{}", _e.as_str()));
+                "0.0".to_owned()
+            }
         };
 
         //println!("code len: {}", codebase_length);
 
         let opened_issues = match rest_api::github_get_open_issues(owner , package).await {
             Ok(opened_issues) => opened_issues,
-            Err(_e) => "0.0".to_owned()
+            Err(_e) => {
+                logger.log_warning(&format!("{}", _e.as_str()));
+                "0.0".to_owned()
+            }
         };
 
         //println!("open issues: {}", opened_issues);
 
         let license = match rest_api::github_get_license(owner , package).await {
             Ok(license) => license,
-            Err(_e) => "0.0".to_owned()
+            Err(_e) => {
+                logger.log_warning(&format!("{}", _e.as_str()));
+                "0.0".to_owned()
+            }
         };
 
         //println!("license: {}", license);
 
         let number_of_forks = match rest_api::github_get_number_of_forks(owner , package).await {
             Ok(number_of_forks) => number_of_forks,
-            Err(_e) => "0.0".to_owned()
+            Err(_e) => {
+                logger.log_warning(&format!("{}", _e.as_str()));
+                "0.0".to_owned()
+            }
         };
 
         //println!("number_of_forks: {}", number_of_forks);
 
-        let ru = metric_calculations::get_ramp_up_time(&codebase_length);
-        let c = metric_calculations::get_correctness(&opened_issues);
-        let bf = metric_calculations::get_bus_factor(&number_of_forks);
-        let l = metric_calculations::get_license(&license);
-        let rm = metric_calculations::get_responsive_maintainer();
+        let mut ru = metric_calculations::get_ramp_up_time(&codebase_length);
+        if ru == -1.0 {
+            ru = 0.0;
+            logger.log_error(&format!("Failed to get ramp up time from {}/{}", owner, package));
+        }
+        let mut c = metric_calculations::get_correctness(&opened_issues);
+        if c == -1.0 {
+            c = 0.0;
+            logger.log_error(&format!("Failed to get number of open issues from {}/{}", owner, package));
+        }
+        let mut bf = metric_calculations::get_bus_factor(&number_of_forks);
+        if bf == -1.0 {
+            bf =  0.0;
+            logger.log_error(&format!("Failed to get number of forks from {}/{}", owner, package));
+        }
+        let mut l = metric_calculations::get_license(&license);
+        if l == -1.0 {
+            l =  0.0;
+            logger.log_error(&format!("Failed to get license from {}/{}", owner, package));
+        }
+        let mut rm = metric_calculations::get_responsive_maintainer();
+
+
 
         let metrics = [ru, c, bf, l]; // responsive maintainer is omitted
         let o = metric_calculations::get_overall(&metrics);

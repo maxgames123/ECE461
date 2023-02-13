@@ -12,7 +12,9 @@ fn min(n1: f32, n2: f32) -> f32 {
 pub fn get_ramp_up_time(codebase_length: &str) -> f32 {
     let codebase_length = match codebase_length.parse::<f32>() {
         Ok(n) => n,
-        Err(_) => 0.0
+        Err(_) => {
+            -1.0
+        }
     };
     normalize(min(codebase_length, 50000.0), 50000.0)
 }
@@ -20,7 +22,7 @@ pub fn get_ramp_up_time(codebase_length: &str) -> f32 {
 pub fn get_correctness(opened_issues: &str) -> f32 {
     let opened_issues = match opened_issues.parse::<f32>() {
         Ok(n) => n,
-        Err(_) => 0.0
+        Err(_) => -1.0
     };
     normalize(min(opened_issues, 2000.0), 2000.0)
 }
@@ -28,7 +30,7 @@ pub fn get_correctness(opened_issues: &str) -> f32 {
 pub fn get_bus_factor(number_of_forks: &str) -> f32 {
     let number_of_forks = match number_of_forks.parse::<f32>() {
         Ok(n) => n,
-        Err(_) => 0.0
+        Err(_) => -1.0
     };
     normalize(min(number_of_forks, 1000.0), 1000.0)
 }
