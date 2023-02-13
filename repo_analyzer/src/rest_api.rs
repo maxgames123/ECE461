@@ -92,7 +92,7 @@ pub async fn github_get_codebase_length(owner: &str, repository: &str) -> Result
     }
     let response = response_res.unwrap();
 
-    println!("{:#?}", response);
+    // println!("{:#?}", response);
 
     let codebase_length_res = response.get("size");
     if codebase_length_res.is_none() {
