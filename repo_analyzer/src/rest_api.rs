@@ -125,6 +125,28 @@ pub async fn github_get_open_issues(owner: &str, repository: &str) -> Result<Str
 
 }
 
+pub async fn github_get_number_of_forks(owner: &str, repository: &str) -> Result<String, String> {
+
+    let response_res = github_get_response_body(owner, repository, None).await;
+    if response_res.is_err() {
+        return Err(response_res.err().unwrap().to_string())
+    }
+    let response = response_res.unwrap();
+
+    let forks_res = response.get("forks");
+    if forks_res.is_none() {
+        return Err(format!("Failed to get number of open issues of {}/{}", owner, repository));
+    }
+
+    let forks_val = forks_res.unwrap().as_i64();
+    if forks_val.is_none() {
+        return Err(format!("Failed to get number of open issues of {}/{}", owner, repository));
+    }
+
+    Ok(format!("{}", forks_val.unwrap()))
+
+}
+
 pub async fn github_get_license(owner: &str, repository: &str) -> Result<String, String> {
 
     let contents_path = format!("{}/contents", repository);

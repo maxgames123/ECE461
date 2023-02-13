@@ -121,10 +121,6 @@ async fn run_url(filename: &str) {
         let mut owner = data[0].as_str();
         let mut package = data[1].as_str();
 
-        // println!("Domain is {}", domain);
-        // println!("owner is {}", owner);
-        // println!("package is {}\n", package);
-
         if !domain.eq("npmjs") && !domain.eq("github"){
             println!("Domain must either be npmjs or github!\n");
             continue;
@@ -140,12 +136,6 @@ async fn run_url(filename: &str) {
             owner = git_data[0].as_str();
             package = git_data[1].as_str();
 
-            // println!("Domain is {}", domain);
-            // println!("github_link is {}", github_link);
-            // println!("owner is {}", git_data[0]);
-            // println!("package is {}\n", git_data[1]);
-
-
             let codebase_length = rest_api::github_get_codebase_length(owner , package).await.unwrap();
             println!("code len: {}", codebase_length);
 
@@ -155,7 +145,19 @@ async fn run_url(filename: &str) {
             let license = rest_api::github_get_license(owner , package).await.unwrap();
             println!("license: {}", license);
 
-            repos.add_repo(repo_list::Repo {url: repo_url, ..Default::default()});
+            let number_of_forks = rest_api::github_get_number_of_forks(owner , package).await.unwrap();
+            println!("number_of_forks: {}", number_of_forks);
+
+            let ru = metric_calculations::get_ramp_up_time(&codebase_length);
+            let c = metric_calculations::get_correctness(&opened_issues);
+            let bf = metric_calculations::get_bus_factor(&number_of_forks);
+            let l = metric_calculations::get_license(&license);
+            let rm = metric_calculations::get_responsive_maintainer();
+
+            let metrics = [ru, c, bf, l]; // responsive maintainer is omitted
+            let o = metric_calculations::get_overall(&metrics);
+
+            repos.add_repo(repo_list::Repo {url : repo_url, net_score : o, ramp_up : ru, correctness : c, bus_factor : bf, responsive_maintainer : rm, license : l});
             continue;
 
         }
@@ -171,13 +173,19 @@ async fn run_url(filename: &str) {
         let license = rest_api::github_get_license(owner , package).await.unwrap();
         println!("license: {}", license);
 
-        //let metrics = rest_api::github_get_metrics(owner,package).await;
-        repos.add_repo(repo_list::Repo {url: repo_url, ..Default::default()});
+        let number_of_forks = rest_api::github_get_number_of_forks(owner , package).await.unwrap();
+        println!("number_of_forks: {}", number_of_forks);
 
-        // What we should do here:
-        // 1) Get data from GitHub for each metric
-        // 2) Calculate each metric
-        // 3) Update line below with the scores. It just gives default values for now.
+        let ru = metric_calculations::get_ramp_up_time(&codebase_length);
+        let c = metric_calculations::get_correctness(&opened_issues);
+        let bf = metric_calculations::get_bus_factor(&number_of_forks);
+        let l = metric_calculations::get_license(&license);
+        let rm = metric_calculations::get_responsive_maintainer();
+
+        let metrics = [ru, c, bf, l]; // responsive maintainer is omitted
+        let o = metric_calculations::get_overall(&metrics);
+
+        repos.add_repo(repo_list::Repo {url : repo_url, net_score : o, ramp_up : ru, correctness : c, bus_factor : bf, responsive_maintainer : rm, license : l});
     }
 
     repos.sort_by_net_score(); // will sort the RepoList by trustworthiness.
