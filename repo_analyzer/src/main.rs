@@ -146,28 +146,28 @@ async fn run_url(filename: &str) {
                 Err(_e) => "0.0".to_owned()
             };
     
-            println!("code len: {}", codebase_length);
+            //println!("code len: {}", codebase_length);
     
             let opened_issues = match rest_api::github_get_open_issues(owner , package).await {
                 Ok(opened_issues) => opened_issues,
                 Err(_e) => "0.0".to_owned()
             };
     
-            println!("open issues: {}", opened_issues);
+            //println!("open issues: {}", opened_issues);
     
             let license = match rest_api::github_get_license(owner , package).await {
                 Ok(license) => license,
                 Err(_e) => "0.0".to_owned()
             };
     
-            println!("license: {}", license);
+            //println!("license: {}", license);
     
             let number_of_forks = match rest_api::github_get_number_of_forks(owner , package).await {
                 Ok(number_of_forks) => number_of_forks,
                 Err(_e) => "0.0".to_owned()
             };
     
-            println!("number_of_forks: {}", number_of_forks);
+            //println!("number_of_forks: {}", number_of_forks);
 
             let ru = metric_calculations::get_ramp_up_time(&codebase_length);
             let c = metric_calculations::get_correctness(&opened_issues);
@@ -190,28 +190,28 @@ async fn run_url(filename: &str) {
             Err(_e) => "0.0".to_owned()
         };
 
-        println!("code len: {}", codebase_length);
+        //println!("code len: {}", codebase_length);
 
         let opened_issues = match rest_api::github_get_open_issues(owner , package).await {
             Ok(opened_issues) => opened_issues,
             Err(_e) => "0.0".to_owned()
         };
 
-        println!("open issues: {}", opened_issues);
+        //println!("open issues: {}", opened_issues);
 
         let license = match rest_api::github_get_license(owner , package).await {
             Ok(license) => license,
             Err(_e) => "0.0".to_owned()
         };
 
-        println!("license: {}", license);
+        //println!("license: {}", license);
 
         let number_of_forks = match rest_api::github_get_number_of_forks(owner , package).await {
             Ok(number_of_forks) => number_of_forks,
             Err(_e) => "0.0".to_owned()
         };
 
-        println!("number_of_forks: {}", number_of_forks);
+        //println!("number_of_forks: {}", number_of_forks);
 
         let ru = metric_calculations::get_ramp_up_time(&codebase_length);
         let c = metric_calculations::get_correctness(&opened_issues);
