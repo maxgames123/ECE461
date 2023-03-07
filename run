@@ -1,0 +1,21 @@
+#!/bin/bash
+
+run="./repo_analyzer/target/debug/run"
+
+if [ "$0" == "./run" ] && [ "$1" == "install" ]; then
+ cd repo_analyzer
+ cargo install --path .
+elif [ "$0" == "./run" ] && [ "$1" == "build" ]; then
+  cd repo_analyzer
+  cargo clean
+  cargo build
+elif [ "$0" == "./run" ] && [[ "$1" == *.txt ]]; then
+ if [ ! -f "$1" ]; then
+  echo "Error: Url file does not exist."
+  exit 1
+ fi
+ url=$(realpath "$1")
+ $run "$url"
+else
+ echo "Error: Invalid arguments."
+fi
