@@ -2,7 +2,7 @@
 
 Project Members: Maximilian Manzhosov, Kevin Loiselle, Zach Liao, Omar Tounsi
 
-
-Please run cargo build inside the repo_analyzer directory.
-
-The run executable will be located inside repo_analyzer/target/debug.
+Usage:
+./run install : Installs dependencies.
+./run build : Builds project.
+./run [urlFile] : Prints an ordered list of repositories contained in [urlFile] based on trustworthiness.
