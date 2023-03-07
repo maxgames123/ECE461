@@ -3,6 +3,7 @@
 Project Members: Maximilian Manzhosov, Kevin Loiselle, Zach Liao, Omar Tounsi
 
 Usage:
+
 ./run install : Installs dependencies.
 
 ./run build : Builds project.
