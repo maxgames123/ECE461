@@ -4,7 +4,6 @@ run="./repo_analyzer/target/debug/run"
 
 if [ "$0" == "./run" ] && [ "$1" == "install" ]; then
  cd repo_analyzer
- curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
  cargo install --path .
 elif [ "$0" == "./run" ] && [ "$1" == "build" ]; then
   cd repo_analyzer
