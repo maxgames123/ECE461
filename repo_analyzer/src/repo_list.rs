@@ -9,7 +9,7 @@ pub struct Repo{
     pub correctness: f32,
     pub bus_factor: f32,
     pub responsive_maintainer: f32,
-    pub license: f32,
+    pub license: i32,
 }
 
 impl Default for Repo {
@@ -21,7 +21,7 @@ impl Default for Repo {
             correctness: 0.0,
             bus_factor: 0.0,
             responsive_maintainer: 0.0,
-            license: 0.0,
+            license: 0,
         }
     }
 }
@@ -46,7 +46,7 @@ impl RepoList {
 
     pub fn display(&self) {
         for repo in &self.repos {
-            println!("{{\"URL\":\"{}\", \"NET_SCORE\":{:.2}, \"RAMP_UP_SCORE\":{:.2}, \"CORRECTNESS_SCORE\":{:.2}, \"BUS_FACTOR_SCORE\":{:.2}, \"RESPONSIVE_MAINTAINER_SCORE\":{:.2}, \"LICENSE_SCORE\":{:.2}}}", 
+            println!("{{\"URL\":\"{}\", \"NET_SCORE\":{:.1}, \"RAMP_UP_SCORE\":{:.1}, \"CORRECTNESS_SCORE\":{:.1}, \"BUS_FACTOR_SCORE\":{:.1}, \"RESPONSIVE_MAINTAINER_SCORE\":{:.1}, \"LICENSE_SCORE\":{:.1}}}", 
                 repo.url, repo.net_score, repo.ramp_up, repo.correctness, repo.bus_factor, repo.responsive_maintainer, repo.license);
         }
     }

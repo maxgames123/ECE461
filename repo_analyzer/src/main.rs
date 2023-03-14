@@ -219,12 +219,14 @@ async fn run_url(filename: &str) {
         }
         let rm = metric_calculations::get_responsive_maintainer();
 
+        let l_int = l as i32;
+
 
 
         let metrics = [ru, c, bf, l]; // responsive maintainer is omitted
         let o = metric_calculations::get_overall(&metrics);
 
-        repos.add_repo(repo_list::Repo {url : repo_url, net_score : o, ramp_up : ru, correctness : c, bus_factor : bf, responsive_maintainer : rm, license : l});
+        repos.add_repo(repo_list::Repo {url : repo_url, net_score : o, ramp_up : ru, correctness : c, bus_factor : bf, responsive_maintainer : rm, license : l_int});
     }
 
     repos.sort_by_net_score(); // will sort the RepoList by trustworthiness.
