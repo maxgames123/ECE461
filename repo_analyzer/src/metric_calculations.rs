@@ -55,7 +55,7 @@ pub fn get_license(license: &str) -> f32 {
 }
 
 pub fn get_responsive_maintainer() -> f32 {
-    -1.0
+    0.0
 }
 
 pub fn get_overall(metrics: &[f32]) -> f32 {
